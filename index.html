@@ -1,0 +1,177 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Login & Register | AnimalHealthCare</title>
+
+  <link rel="stylesheet" href="styles.css">
+
+  <link
+    href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+    rel="stylesheet"
+  >
+</head>
+
+<body class="auth-page">
+
+  <!-- Decorative heading -->
+  <h2 onclick='alert("Hello World")'>
+    <section></section>
+    <section></section>
+    <section></section>
+  </h2>
+
+  <!-- Authentication Wrapper -->
+  <div class="wrapper" id="auth-wrapper">
+
+    <!-- LOGIN FORM -->
+    <form id="login-form">
+
+      <h1>
+        <span style="color:white;">Login</span>
+      </h1>
+
+      <div class="input-box">
+        <input
+          id="login-username"
+          type="text"
+          placeholder="Username"
+          required
+        >
+        <i class="bx bxs-user" style="color:gold;"></i>
+      </div>
+
+      <div class="input-box">
+        <input
+          id="login-password"
+          type="password"
+          placeholder="Password"
+          required
+        >
+        <i class="bx bxs-lock-alt" style="color:white;"></i>
+      </div>
+
+      <!-- LOGIN ROLE -->
+      <div class="input-box">
+        <select id="login-role" required>
+          <option value="">Login as...</option>
+          <option value="farmer">Farmer</option>
+          <option value="vet">Veterinarian</option>
+        </select>
+      </div>
+
+      <div class="remember-forgot">
+        <label>
+          <input type="checkbox">
+          Remember me
+        </label>
+
+        <a href="forgot_password.html">
+          Forgotten password?
+        </a>
+      </div>
+
+      <button type="submit" class="but" style="color:aliceblue;">
+        Login
+      </button>
+
+      <div class="register-link">
+        <p>
+          Don't have an account?
+          <a href="#" id="register-link">
+            <span style="color:#00d8d6;">Register</span>
+          </a>
+        </p>
+      </div>
+
+    </form>
+
+
+    <!-- REGISTER FORM -->
+    <form id="register-form" style="display:none;">
+
+      <h1>
+        <span style="color:white;">Register</span>
+      </h1>
+
+      <div class="input-box">
+        <input
+          type="text"
+          placeholder="Name"
+          required
+        >
+        <i class="bx bxs-user" style="color:gold;"></i>
+      </div>
+
+      <div class="input-box">
+        <input
+          type="text"
+          placeholder="Surname"
+          required
+        >
+        <i class="bx bxs-user" style="color:gold;"></i>
+      </div>
+
+      <div class="input-box">
+        <input
+          type="email"
+          placeholder="Email Address"
+          required
+        >
+        <i class="bx bxs-envelope" style="color:white;"></i>
+      </div>
+
+      <div class="input-box">
+        <input
+          type="password"
+          placeholder="New Password"
+          required
+        >
+        <i class="bx bxs-lock-alt" style="color:white;"></i>
+      </div>
+
+      <div class="input-box">
+        <input
+          type="password"
+          placeholder="Confirm Password"
+          required
+        >
+        <i class="bx bxs-lock-alt" style="color:white;"></i>
+      </div>
+
+      <button type="submit" class="but" style="color:antiquewhite;">
+        Register
+      </button>
+
+      <div class="register-link">
+        <p>
+          Already have an account?
+          <a href="#" id="back-to-login">
+            <span style="color:#00d8d6;">Login</span>
+          </a>
+        </p>
+      </div>
+
+    </form>
+
+
+    <!-- CATTLECARE BRANDING -->
+    <div class="branding-header">
+
+      <h2 class="glow-title">
+        <span>🐄</span>
+        AnimalHealth<span style="color:#00d8d6;">Care</span>
+      </h2>
+
+    </div>
+
+  </div>
+
+  <script src="script.js"></script>
+
+</body>
+</html>
+

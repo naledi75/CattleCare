@@ -1,0 +1,1077 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0">
+
+  <title>CattleCare | Dashboard</title>
+
+  <link
+    rel="stylesheet"
+    href="styles.css">
+
+</head>
+
+
+<body>
+
+
+  <!-- Sidebar Toggle -->
+
+  <button
+    class="toggle-btn"
+    id="sidebarToggle"
+    type="button"
+    aria-label="Open navigation menu">
+
+    ☰
+
+  </button>
+
+
+  <!-- Dark Mode -->
+
+  <button
+    id="darkToggle"
+    class="dark-toggle"
+    type="button">
+
+    🌙 Dark Mode
+
+  </button>
+
+
+  <!-- Sidebar -->
+
+  <aside
+    class="sidebar"
+    id="sidebar">
+
+
+    <h1 class="logo">
+
+      🐄 Cattle<span>Care</span>
+
+    </h1>
+
+
+    <nav class="sidebar-nav">
+
+
+      <a href="main.html">
+
+        🏠 Home
+
+      </a>
+
+
+      <a href="my-cattle.html">
+
+        🐮 My Cattle
+
+      </a>
+
+
+      <a href="add-symptoms.html">
+
+        ➕ Add Symptoms
+
+      </a>
+
+
+      <a href="ai-health-check.html">
+
+        🤖 AI Health Check
+
+      </a>
+
+
+      <a href="diagnosis.html">
+
+        📄 Vet Diagnosis
+
+      </a>
+
+
+      <a href="appointments.html">
+
+        📅 Appointments
+
+      </a>
+
+
+      <a href="support.html">
+
+        ❓ Support
+
+      </a>
+
+
+      <a
+        href="index.html"
+        class="logout">
+
+        🔓 Logout
+
+      </a>
+
+
+    </nav>
+
+  </aside>
+
+
+
+  <!-- Main Content -->
+
+  <main
+    class="main-content"
+    id="mainContent">
+
+
+    <!-- Hero -->
+
+    <section class="hero">
+
+      <h2>
+
+        Welcome to CattleCare
+
+      </h2>
+
+
+      <p>
+
+        Monitor cattle health, track symptoms,
+        and stay informed about the wellbeing
+        of your herd.
+
+      </p>
+
+    </section>
+
+
+
+    <!-- Herd Health Overview -->
+
+    <section class="content-section">
+
+
+      <h2>
+
+        🐄 Herd Health Overview
+
+      </h2>
+
+
+      <div class="health-overview-grid">
+
+
+        <!-- Healthy -->
+
+        <div class="health-status-card healthy-status">
+
+
+          <div class="health-icon">
+
+            🟢
+
+          </div>
+
+
+          <div>
+
+            <h3>
+
+              Healthy
+
+            </h3>
+
+
+            <p>
+
+              <strong id="healthyCount">
+
+                0
+
+              </strong>
+
+              cattle currently appear healthy.
+
+            </p>
+
+          </div>
+
+
+        </div>
+
+
+
+        <!-- Monitoring -->
+
+        <div class="health-status-card monitoring-status">
+
+
+          <div class="health-icon">
+
+            🟠
+
+          </div>
+
+
+          <div>
+
+            <h3>
+
+              Monitoring
+
+            </h3>
+
+
+            <p>
+
+              <strong id="monitoringCount">
+
+                0
+
+              </strong>
+
+              cattle have recent symptoms.
+
+            </p>
+
+          </div>
+
+
+        </div>
+
+
+
+        <!-- Attention -->
+
+        <div class="health-status-card attention-status">
+
+
+          <div class="health-icon">
+
+            🔴
+
+          </div>
+
+
+          <div>
+
+            <h3>
+
+              Attention Required
+
+            </h3>
+
+
+            <p>
+
+              <strong id="attentionCount">
+
+                0
+
+              </strong>
+
+              cattle may require veterinary attention.
+
+            </p>
+
+          </div>
+
+
+        </div>
+
+
+      </div>
+
+
+    </section>
+
+
+
+    <!-- Health Alerts -->
+
+    <section class="content-section">
+
+
+      <h2>
+
+        🔔 Health Alerts
+
+      </h2>
+
+
+      <div
+        class="alert-list"
+        id="healthAlerts">
+
+
+      </div>
+
+
+    </section>
+
+
+
+    <!-- Recent Health Updates -->
+
+    <section class="content-section">
+
+
+      <h2>
+
+        🩺 Recent Health Updates
+
+      </h2>
+
+
+      <div
+        class="updates-list"
+        id="recentUpdates">
+
+
+      </div>
+
+
+    </section>
+
+
+
+    <!-- Information Grid -->
+
+    <div class="homepage-info-grid">
+
+
+      <!-- Farm Health Tip -->
+
+      <section class="content-section">
+
+
+        <h2>
+
+          💡 Farm Health Tip
+
+        </h2>
+
+
+        <p>
+
+          Pay attention to changes in appetite,
+          behaviour, movement, drinking habits,
+          and general appearance. Early
+          identification of unusual changes can
+          help you respond to health concerns
+          sooner.
+
+        </p>
+
+
+      </section>
+
+
+
+      <!-- Reminder -->
+
+      <section class="content-section">
+
+
+        <h2>
+
+          ⏰ Today's Reminder
+
+        </h2>
+
+
+        <p id="dashboardReminder">
+
+          Check your cattle health records
+          regularly and make sure all cattle
+          have access to clean water, food,
+          and a comfortable environment.
+
+        </p>
+
+
+      </section>
+
+
+    </div>
+
+
+
+    <!-- About CattleCare -->
+
+    <section class="content-section">
+
+
+      <h2>
+
+        About CattleCare
+
+      </h2>
+
+
+      <p>
+
+        CattleCare helps farmers monitor cattle
+        health, record symptoms, receive
+        veterinary feedback, and manage
+        appointments.
+
+      </p>
+
+
+      <p>
+
+        The homepage provides an overview of
+        important cattle health information,
+        while the navigation menu provides access
+        to the different management features.
+
+      </p>
+
+
+    </section>
+
+
+
+    <!-- Footer -->
+
+    <footer class="dashboard-footer">
+
+      <p>
+
+        © 2025 CattleCare for Farmers
+
+      </p>
+
+    </footer>
+
+
+  </main>
+
+
+
+  <!-- Existing JavaScript -->
+
+  <script src="script.js"></script>
+
+
+
+  <!-- Dashboard Dynamic Data -->
+
+  <script>
+
+    document.addEventListener(
+      "DOMContentLoaded",
+      function () {
+
+
+        /* =====================================
+           LOAD DATA
+        ===================================== */
+
+
+        const cattle = JSON.parse(
+
+          localStorage.getItem("cattle")
+
+        ) || [];
+
+
+        const symptomRecords = JSON.parse(
+
+          localStorage.getItem("symptomRecords")
+
+        ) || [];
+
+
+
+        /* =====================================
+           DASHBOARD ELEMENTS
+        ===================================== */
+
+
+        const healthyCount =
+          document.getElementById(
+            "healthyCount"
+          );
+
+
+        const monitoringCount =
+          document.getElementById(
+            "monitoringCount"
+          );
+
+
+        const attentionCount =
+          document.getElementById(
+            "attentionCount"
+          );
+
+
+        const healthAlerts =
+          document.getElementById(
+            "healthAlerts"
+          );
+
+
+        const recentUpdates =
+          document.getElementById(
+            "recentUpdates"
+          );
+
+
+        const dashboardReminder =
+          document.getElementById(
+            "dashboardReminder"
+          );
+
+
+
+        /* =====================================
+           COUNT HEALTH STATUS
+        ===================================== */
+
+
+        let healthy = 0;
+
+        let monitoring = 0;
+
+        let attention = 0;
+
+
+
+        cattle.forEach(
+          function (animal) {
+
+
+            const health =
+              String(
+                animal.health || "Healthy"
+              ).toLowerCase();
+
+
+            if (
+              health.includes("attention") ||
+              health.includes("critical") ||
+              health.includes("urgent")
+            ) {
+
+              attention++;
+
+            }
+
+            else if (
+              health.includes("monitor") ||
+              health.includes("sick") ||
+              health.includes("symptom")
+            ) {
+
+              monitoring++;
+
+            }
+
+            else {
+
+              healthy++;
+
+            }
+
+          }
+        );
+
+
+
+        /* =====================================
+           USE HEALTH RECORDS
+        ===================================== */
+
+
+        symptomRecords.forEach(
+          function (record) {
+
+
+            const risk =
+              record.aiAssessment
+                ? String(
+                    record.aiAssessment.riskLevel ||
+                    ""
+                  ).toLowerCase()
+                : "";
+
+
+            if (
+              risk.includes("high") ||
+              record.status ===
+                "Awaiting Diagnosis"
+            ) {
+
+              attention++;
+
+            }
+
+            else if (
+              risk.includes("moderate") ||
+              risk.includes("medium")
+            ) {
+
+              monitoring++;
+
+            }
+
+          }
+        );
+
+
+
+        /* =====================================
+           DISPLAY COUNTS
+        ===================================== */
+
+
+        healthyCount.textContent =
+          healthy;
+
+
+        monitoringCount.textContent =
+          monitoring;
+
+
+        attentionCount.textContent =
+          attention;
+
+
+
+        /* =====================================
+           HEALTH ALERTS
+        ===================================== */
+
+
+        healthAlerts.innerHTML = "";
+
+
+
+        if (
+          symptomRecords.length === 0
+        ) {
+
+
+          healthAlerts.innerHTML = `
+
+            <div class="health-alert alert-success">
+
+              <span>🟢</span>
+
+              <div>
+
+                <strong>
+                  No health cases recorded
+                </strong>
+
+                <p>
+                  Your cattle currently have
+                  no recorded health cases.
+                </p>
+
+              </div>
+
+            </div>
+
+          `;
+
+        }
+
+        else {
+
+
+          const highRiskCases =
+            symptomRecords.filter(
+              function (record) {
+
+
+                return (
+                  record.aiAssessment &&
+                  String(
+                    record.aiAssessment.riskLevel
+                  ).toLowerCase()
+                    .includes("high")
+                );
+
+              }
+            );
+
+
+          const pendingCases =
+            symptomRecords.filter(
+              function (record) {
+
+
+                return (
+                  record.status ===
+                  "Awaiting Diagnosis"
+                );
+
+              }
+            );
+
+
+          if (
+            highRiskCases.length > 0
+          ) {
+
+
+            healthAlerts.innerHTML += `
+
+              <div class="health-alert alert-warning">
+
+                <span>🔴</span>
+
+                <div>
+
+                  <strong>
+                    Veterinary attention may be required
+                  </strong>
+
+                  <p>
+                    ${highRiskCases.length}
+                    health case(s) have a
+                    high-risk preliminary AI assessment.
+                  </p>
+
+                </div>
+
+              </div>
+
+            `;
+
+          }
+
+
+          if (
+            pendingCases.length > 0
+          ) {
+
+
+            healthAlerts.innerHTML += `
+
+              <div class="health-alert alert-warning">
+
+                <span>🟠</span>
+
+                <div>
+
+                  <strong>
+                    Health cases awaiting review
+                  </strong>
+
+                  <p>
+                    ${pendingCases.length}
+                    case(s) are currently awaiting
+                    veterinary diagnosis.
+                  </p>
+
+                </div>
+
+              </div>
+
+            `;
+
+          }
+
+
+          healthAlerts.innerHTML += `
+
+            <div class="health-alert alert-info">
+
+              <span>💧</span>
+
+              <div>
+
+                <strong>
+                  Check water availability
+                </strong>
+
+                <p>
+                  Make sure clean drinking water
+                  is available to all cattle.
+                </p>
+
+              </div>
+
+            </div>
+
+          `;
+
+        }
+
+
+
+        /* =====================================
+           RECENT HEALTH UPDATES
+        ===================================== */
+
+
+        recentUpdates.innerHTML = "";
+
+
+        if (
+          symptomRecords.length === 0
+        ) {
+
+
+          recentUpdates.innerHTML = `
+
+            <div class="health-update">
+
+              <div class="update-icon">
+                🐄
+              </div>
+
+              <div class="update-content">
+
+                <h3>
+                  No health updates yet
+                </h3>
+
+                <p>
+                  Health records will appear here
+                  when symptoms or AI health checks
+                  are submitted.
+                </p>
+
+                <span>
+                  Waiting for first health record
+                </span>
+
+              </div>
+
+            </div>
+
+          `;
+
+        }
+
+        else {
+
+
+          const recentRecords =
+            [...symptomRecords]
+              .reverse()
+              .slice(0, 5);
+
+
+          recentRecords.forEach(
+            function (record) {
+
+
+              let icon = "🐄";
+
+
+              if (
+                record.aiAssessment
+              ) {
+
+                const risk =
+                  String(
+                    record.aiAssessment.riskLevel ||
+                    ""
+                  ).toLowerCase();
+
+
+                if (
+                  risk.includes("high")
+                ) {
+
+                  icon = "🔴";
+
+                }
+
+                else if (
+                  risk.includes("moderate") ||
+                  risk.includes("medium")
+                ) {
+
+                  icon = "🟠";
+
+                }
+
+                else {
+
+                  icon = "🟢";
+
+                }
+
+              }
+
+
+              const update =
+                document.createElement(
+                  "div"
+                );
+
+
+              update.className =
+                "health-update";
+
+
+              update.innerHTML = `
+
+                <div class="update-icon">
+
+                  ${icon}
+
+                </div>
+
+
+                <div class="update-content">
+
+                  <h3>
+
+                    🐄 ${escapeHTML(
+                      record.cattle ||
+                      "Unknown Cattle"
+                    )}
+
+                  </h3>
+
+
+                  <p>
+
+                    ${
+                      record.aiAssessment
+                        ? escapeHTML(
+                            record.aiAssessment.concern ||
+                            "AI health assessment completed."
+                          )
+                        : escapeHTML(
+                            (record.symptoms || [])
+                              .join(", ") ||
+                            "Health record submitted."
+                          )
+                    }
+
+                  </p>
+
+
+                  <span>
+
+                    ${escapeHTML(
+                      record.status ||
+                      "Health record submitted"
+                    )}
+
+                    ${
+                      record.date
+                        ? " • " +
+                          escapeHTML(record.date)
+                        : ""
+                    }
+
+                  </span>
+
+                </div>
+
+              `;
+
+
+              recentUpdates.appendChild(
+                update
+              );
+
+            }
+          );
+
+        }
+
+
+
+        /* =====================================
+           REMINDER
+        ===================================== */
+
+
+        if (
+          cattle.length === 0
+        ) {
+
+
+          dashboardReminder.textContent =
+            "Add your cattle first, then use AI Health Check or Add Symptoms to begin monitoring their health.";
+
+        }
+
+        else if (
+          attention > 0
+        ) {
+
+
+          dashboardReminder.textContent =
+            "Some cattle may require attention. Review the health alerts and check any cases awaiting veterinary diagnosis.";
+
+        }
+
+        else if (
+          monitoring > 0
+        ) {
+
+
+          dashboardReminder.textContent =
+            "Continue monitoring cattle with recent symptoms and check whether veterinary follow-up is required.";
+
+        }
+
+        else {
+
+
+          dashboardReminder.textContent =
+            "Your cattle currently have no major recorded health concerns. Continue regular health checks and provide clean water, food, and a comfortable environment.";
+
+        }
+
+
+
+        /* =====================================
+           ESCAPE HTML
+        ===================================== */
+
+
+        function escapeHTML(value) {
+
+
+          const div =
+            document.createElement(
+              "div"
+            );
+
+
+          div.textContent =
+            value ?? "";
+
+
+          return div.innerHTML;
+
+        }
+
+
+      }
+
+    );
+
+  </script>
+
+
+</body>
+
+</html>
+

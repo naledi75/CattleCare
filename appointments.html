@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Appointments | CattleCare</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+  <button class="toggle-btn" id="sidebarToggle" type="button" aria-label="Open navigation menu">
+  ☰
+</button>
+
+  
+
+  <aside class="sidebar" id="sidebar">
+
+    <h1 class="logo">
+      🐄 Cattle<span>Care</span>
+    </h1>
+
+    <nav class="sidebar-nav">
+      <a href="main.html">🏠 Home</a>
+      <a href="my-cattle.html">🐮 My Cattle</a>
+      <a href="add-symptoms.html">➕ Add Symptoms</a>
+      <a href="ai-health-check.html">🤖 AI Health Check</a>
+      <a href="diagnosis.html">📄 Vet Diagnosis</a>
+      <a href="appointments.html" class="active">📅 Appointments</a>
+      <a href="support.html">❓ Support</a>
+      <a href="index.html" class="logout">🔓 Logout</a>
+    </nav>
+
+  </aside>
+
+  <main class="main-content" id="mainContent">
+
+    <section class="hero">
+
+      <h2>Veterinary Appointments</h2>
+
+      <p>
+        Schedule and manage veterinary appointments for your cattle.
+      </p>
+
+    </section>
+
+    <section class="content-section">
+
+      <h2>📅 Book an Appointment</h2>
+
+      <form id="appointmentForm">
+
+        <div class="input-group">
+
+          <label for="appointmentCattle">
+            Cattle
+          </label>
+
+          <select id="appointmentCattle" required>
+            <option value="">Select cattle</option>
+          </select>
+
+        </div>
+
+        <div class="input-group">
+
+          <label for="vetName">
+            Veterinarian / Clinic
+          </label>
+
+          <input
+            type="text"
+            id="vetName"
+            placeholder="Enter veterinarian or clinic name"
+            required
+          >
+
+        </div>
+
+        <div class="input-group">
+
+          <label for="appointmentDate">
+            Appointment Date
+          </label>
+
+          <input
+            type="date"
+            id="appointmentDate"
+            required
+          >
+
+        </div>
+
+        <div class="input-group">
+
+          <label for="appointmentTime">
+            Appointment Time
+          </label>
+
+          <input
+            type="time"
+            id="appointmentTime"
+            required
+          >
+
+        </div>
+
+        <div class="input-group">
+
+          <label for="appointmentReason">
+            Reason for Appointment
+          </label>
+
+          <textarea
+            id="appointmentReason"
+            rows="5"
+            placeholder="Describe the reason for the appointment..."
+            required
+          ></textarea>
+
+        </div>
+
+        <button type="submit" class="but">
+          Book Appointment
+        </button>
+
+      </form>
+
+    </section>
+
+    <section class="content-section">
+
+      <h2>📋 Upcoming Appointments</h2>
+
+      <div id="appointmentList">
+
+        <div class="feature-card">
+
+          <h3>No appointments</h3>
+
+          <p>
+            Your scheduled appointments will appear here.
+          </p>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <footer class="dashboard-footer">
+      <p>© 2025 CattleCare for Farmers</p>
+    </footer>
+
+  </main>
+
+  <script src="script.js"></script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+      const cattleSelect =
+        document.getElementById("appointmentCattle");
+
+      const appointmentForm =
+        document.getElementById("appointmentForm");
+
+      const appointmentList =
+        document.getElementById("appointmentList");
+
+      const cattle =
+        JSON.parse(localStorage.getItem("cattle")) || [];
+
+      const appointments =
+        JSON.parse(localStorage.getItem("appointments")) || [];
+
+      cattle.forEach(function (animal) {
+
+        const option =
+          document.createElement("option");
+
+        option.value = animal.name;
+
+        option.textContent = animal.name;
+
+        cattleSelect.appendChild(option);
+
+      });
+
+      function displayAppointments() {
+
+        appointmentList.innerHTML = "";
+
+        if (appointments.length === 0) {
+
+          appointmentList.innerHTML = `
+            <div class="feature-card">
+              <h3>No appointments</h3>
+              <p>
+                Your scheduled appointments will appear here.
+              </p>
+            </div>
+          `;
+
+          return;
+
+        }
+
+        appointments.forEach(function (appointment, index) {
+
+          const card =
+            document.createElement("div");
+
+          card.className = "feature-card";
+
+          card.innerHTML = `
+
+            <h3>📅 ${appointment.cattle}</h3>
+
+            <p>
+              <strong>Veterinarian:</strong>
+              ${appointment.vet}
+            </p>
+
+            <p>
+              <strong>Date:</strong>
+              ${appointment.date}
+            </p>
+
+            <p>
+              <strong>Time:</strong>
+              ${appointment.time}
+            </p>
+
+            <p>
+              <strong>Reason:</strong>
+              ${appointment.reason}
+            </p>
+
+            <p>
+              <strong>Status:</strong>
+              ${appointment.status}
+            </p>
+
+            <button
+              class="but"
+              type="button"
+              onclick="cancelAppointment(${index})">
+              Cancel Appointment
+            </button>
+
+          `;
+
+          appointmentList.appendChild(card);
+
+        });
+
+      }
+
+      appointmentForm.addEventListener(
+        "submit",
+        function (event) {
+
+          event.preventDefault();
+
+          const appointment = {
+
+            cattle:
+              cattleSelect.value,
+
+            vet:
+              document
+                .getElementById("vetName")
+                .value
+                .trim(),
+
+            date:
+              document
+                .getElementById("appointmentDate")
+                .value,
+
+            time:
+              document
+                .getElementById("appointmentTime")
+                .value,
+
+            reason:
+              document
+                .getElementById("appointmentReason")
+                .value
+                .trim(),
+
+            status: "Pending"
+
+          };
+
+          appointments.push(appointment);
+
+          localStorage.setItem(
+            "appointments",
+            JSON.stringify(appointments)
+          );
+
+          appointmentForm.reset();
+
+          displayAppointments();
+
+          alert("Appointment booked successfully.");
+
+        }
+      );
+
+      window.cancelAppointment =
+        function (index) {
+
+          if (
+            confirm(
+              "Are you sure you want to cancel this appointment?"
+            )
+          ) {
+
+            appointments.splice(index, 1);
+
+            localStorage.setItem(
+              "appointments",
+              JSON.stringify(appointments)
+            );
+
+            displayAppointments();
+
+          }
+
+        };
+
+      displayAppointments();
+
+    });
+  </script>
+
+</body>
+</html>

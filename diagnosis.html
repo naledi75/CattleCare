@@ -1,0 +1,634 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Vet Diagnosis | CattleCare</title>
+
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+  <!-- Sidebar Toggle -->
+  <button
+    class="toggle-btn"
+    id="sidebarToggle"
+    type="button"
+    aria-label="Open navigation menu">
+    ☰
+  </button>
+
+
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+
+    <h1 class="logo">
+      🐄 Cattle<span>Care</span>
+    </h1>
+
+    <nav class="sidebar-nav">
+
+      <a href="main.html">
+        🏠 Home
+      </a>
+
+      <a href="my-cattle.html">
+        🐮 My Cattle
+      </a>
+
+      <a href="add-symptoms.html">
+        ➕ Add Symptoms
+      </a>
+
+      <a href="ai-health-check.html">
+        🤖 AI Health Check
+      </a>
+
+      <a href="diagnosis.html" class="active">
+        📄 Vet Diagnosis
+      </a>
+
+      <a href="appointments.html">
+        📅 Appointments
+      </a>
+
+      <a href="support.html">
+        ❓ Support
+      </a>
+
+      <a href="index.html" class="logout">
+        🔓 Logout
+      </a>
+
+    </nav>
+
+  </aside>
+
+
+  <!-- Main Content -->
+  <main class="main-content" id="mainContent">
+
+    <!-- Hero -->
+    <section class="hero">
+
+      <h2>Veterinary Diagnosis</h2>
+
+      <p>
+        View AI health assessments, symptom reports, and veterinary feedback.
+      </p>
+
+    </section>
+
+
+    <!-- Diagnosis Records -->
+    <section class="content-section">
+
+      <h2>📄 Diagnosis Records</h2>
+
+      <div id="diagnosisList">
+
+        <div class="feature-card">
+
+          <h3>No diagnosis records</h3>
+
+          <p>
+            Once you submit cattle symptoms, they will appear here.
+          </p>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- How Diagnosis Works -->
+    <section class="content-section">
+
+      <h2>🩺 How Diagnosis Works</h2>
+
+      <div class="features-grid">
+
+        <div class="feature-card">
+
+          <h3>1️⃣ Record Symptoms</h3>
+
+          <p>
+            Add the symptoms you have observed in your cattle.
+          </p>
+
+        </div>
+
+
+        <div class="feature-card">
+
+          <h3>2️⃣ AI Preliminary Screening</h3>
+
+          <p>
+            CattleCare AI provides a preliminary health assessment
+            based on the submitted symptoms and captured image.
+          </p>
+
+        </div>
+
+
+        <div class="feature-card">
+
+          <h3>3️⃣ Veterinary Review</h3>
+
+          <p>
+            A veterinary professional can review the submitted
+            information and AI assessment.
+          </p>
+
+        </div>
+
+
+        <div class="feature-card">
+
+          <h3>4️⃣ Receive Final Feedback</h3>
+
+          <p>
+            The veterinarian's diagnosis and treatment advice
+            are displayed here for the farmer.
+          </p>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- Footer -->
+    <footer class="dashboard-footer">
+
+      <p>
+        © 2025 CattleCare for Farmers
+      </p>
+
+    </footer>
+
+  </main>
+
+
+  <!-- Main JavaScript -->
+  <script src="script.js"></script>
+
+
+  <!-- Diagnosis Page JavaScript -->
+  <script>
+
+    document.addEventListener("DOMContentLoaded", function () {
+
+      const diagnosisList =
+        document.getElementById("diagnosisList");
+
+
+      /*
+        Get all health records saved by:
+
+        1. Add Symptoms
+        2. AI Health Check
+
+        The Vet Dashboard also updates these same records
+        when the veterinarian submits a diagnosis.
+      */
+
+      const records =
+        JSON.parse(
+          localStorage.getItem("symptomRecords")
+        ) || [];
+
+
+      diagnosisList.innerHTML = "";
+
+
+      /*
+        No records
+      */
+
+      if (records.length === 0) {
+
+        diagnosisList.innerHTML = `
+
+          <div class="feature-card">
+
+            <h3>
+              No diagnosis records
+            </h3>
+
+            <p>
+              Once you submit cattle symptoms or an AI health
+              check, they will appear here.
+            </p>
+
+          </div>
+
+        `;
+
+        return;
+
+      }
+
+
+      /*
+        Display every health record
+      */
+
+      records.forEach(function (record, index) {
+
+        const card =
+          document.createElement("div");
+
+
+        card.className =
+          "feature-card";
+
+
+        /*
+          ------------------------------------------------
+          AI ASSESSMENT
+          ------------------------------------------------
+        */
+
+        let aiAssessmentHTML = "";
+
+
+        if (record.aiAssessment) {
+
+          aiAssessmentHTML = `
+
+            <div
+              style="
+                margin-top: 20px;
+                padding: 20px;
+                border-radius: 12px;
+                border: 1px solid #d1d5db;
+                background: #f8fafc;
+              "
+            >
+
+              <h3>
+                🤖 AI Preliminary Assessment
+              </h3>
+
+
+              <p>
+                <strong>Risk Level:</strong>
+                ${escapeHTML(
+                  record.aiAssessment.riskLevel
+                )}
+              </p>
+
+
+              <p>
+                <strong>Possible Concern:</strong>
+                ${escapeHTML(
+                  record.aiAssessment.concern
+                )}
+              </p>
+
+
+              <p>
+                <strong>Assessment:</strong>
+                ${escapeHTML(
+                  record.aiAssessment.explanation
+                )}
+              </p>
+
+
+              <p>
+                <strong>Recommendation:</strong>
+                ${escapeHTML(
+                  record.aiAssessment.recommendation
+                )}
+              </p>
+
+
+              <p
+                style="
+                  margin-top: 15px;
+                  font-size: 13px;
+                  color: #64748b;
+                "
+              >
+
+                ⚠️ This is a preliminary AI screening result
+                and does not replace professional veterinary
+                diagnosis.
+
+              </p>
+
+            </div>
+
+          `;
+
+        }
+
+
+        /*
+          ------------------------------------------------
+          CATTLE IMAGE
+          ------------------------------------------------
+        */
+
+        let cattleImageHTML = "";
+
+
+        if (record.capturedImage) {
+
+          cattleImageHTML = `
+
+            <div
+              style="
+                margin-top: 20px;
+                text-align: center;
+              "
+            >
+
+              <h3>
+                📷 Cattle Image
+              </h3>
+
+
+              <img
+                src="${record.capturedImage}"
+                alt="Captured cattle"
+                style="
+                  width: 100%;
+                  max-width: 500px;
+                  max-height: 400px;
+                  object-fit: cover;
+                  border-radius: 12px;
+                  border: 1px solid #d1d5db;
+                "
+              >
+
+            </div>
+
+          `;
+
+        }
+
+
+        /*
+          ------------------------------------------------
+          VETERINARY FEEDBACK
+          ------------------------------------------------
+        */
+
+        let veterinaryFeedback = "";
+
+
+        if (record.diagnosis) {
+
+          veterinaryFeedback = `
+
+            <div
+              style="
+                margin-top: 20px;
+                padding: 20px;
+                border-radius: 12px;
+                border: 1px solid #d1d5db;
+              "
+            >
+
+              <h3>
+                🩺 Final Veterinary Diagnosis
+              </h3>
+
+
+              <p>
+                ${escapeHTML(
+                  record.diagnosis
+                )}
+              </p>
+
+
+              <h3>
+                💊 Veterinary Advice / Treatment
+              </h3>
+
+
+              <p>
+                ${
+                  record.advice
+                    ? escapeHTML(record.advice)
+                    : "No additional advice provided."
+                }
+              </p>
+
+
+              ${
+                record.diagnosedDate
+                  ? `
+
+                    <p>
+
+                      <strong>
+                        Diagnosis Date:
+                      </strong>
+
+                      ${escapeHTML(
+                        record.diagnosedDate
+                      )}
+
+                    </p>
+
+                  `
+                  : ""
+              }
+
+
+              <p>
+                <strong>
+                  Status:
+                </strong>
+
+                ${escapeHTML(
+                  record.status
+                )}
+              </p>
+
+            </div>
+
+          `;
+
+        } else {
+
+          veterinaryFeedback = `
+
+            <div
+              style="
+                margin-top: 20px;
+                padding: 20px;
+                border-radius: 12px;
+                border: 1px solid #d1d5db;
+              "
+            >
+
+              <h3>
+                🩺 Veterinary Feedback
+              </h3>
+
+
+              <p>
+                No veterinary diagnosis has been added yet.
+              </p>
+
+
+              <p>
+                This case is currently awaiting veterinary review.
+              </p>
+
+            </div>
+
+          `;
+
+        }
+
+
+        /*
+          ------------------------------------------------
+          COMPLETE CARD
+          ------------------------------------------------
+        */
+
+        card.innerHTML = `
+
+          <h3>
+            🐄 ${escapeHTML(record.cattle)}
+          </h3>
+
+
+          <p>
+            <strong>
+              Date:
+            </strong>
+
+            ${escapeHTML(record.date)}
+          </p>
+
+
+          <p>
+            <strong>
+              Symptoms:
+            </strong>
+
+            ${escapeHTML(
+              record.symptoms.join(", ")
+            )}
+          </p>
+
+
+          <p>
+            <strong>
+              Additional Information:
+            </strong>
+
+            ${
+              record.description
+                ? escapeHTML(record.description)
+                : "None provided"
+            }
+
+          </p>
+
+
+          ${cattleImageHTML}
+
+
+          ${aiAssessmentHTML}
+
+
+          <hr
+            style="
+              margin: 25px 0;
+              border: none;
+              border-top: 1px solid #d1d5db;
+            "
+          >
+
+
+          ${veterinaryFeedback}
+
+
+          <button
+            class="but"
+            type="button"
+            onclick="deleteDiagnosis(${index})"
+          >
+
+            Remove Record
+
+          </button>
+
+        `;
+
+
+        diagnosisList.appendChild(card);
+
+      });
+
+
+      /*
+        ------------------------------------------------
+        DELETE RECORD
+        ------------------------------------------------
+      */
+
+      window.deleteDiagnosis = function (index) {
+
+        if (
+          confirm(
+            "Are you sure you want to remove this symptom record?"
+          )
+        ) {
+
+          records.splice(index, 1);
+
+
+          localStorage.setItem(
+            "symptomRecords",
+            JSON.stringify(records)
+          );
+
+
+          location.reload();
+
+        }
+
+      };
+
+
+      /*
+        ------------------------------------------------
+        SECURITY HELPER
+        ------------------------------------------------
+      */
+
+      function escapeHTML(value) {
+
+        const div =
+          document.createElement("div");
+
+
+        div.textContent =
+          value ?? "";
+
+
+        return div.innerHTML;
+
+      }
+
+    });
+
+  </script>
+
+</body>
+</html>
+

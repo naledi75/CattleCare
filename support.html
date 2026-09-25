@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Support | CattleCare</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+  <button class="toggle-btn" id="sidebarToggle" type="button" aria-label="Open navigation menu">
+  ☰
+</button>
+
+  <aside class="sidebar" id="sidebar">
+
+    <h1 class="logo">
+      🐄 Cattle<span>Care</span>
+    </h1>
+
+    <nav class="sidebar-nav">
+
+      <a href="main.html">
+        🏠 Home
+      </a>
+
+      <a href="my-cattle.html">
+        🐮 My Cattle
+      </a>
+
+      <a href="add-symptoms.html">
+        ➕ Add Symptoms
+      </a>
+      <a href="ai-health-check.html">
+        🤖 AI Health Check
+
+      <a href="diagnosis.html">
+        📄 Vet Diagnosis
+      </a>
+
+      <a href="appointments.html">
+        📅 Appointments
+      </a>
+
+      <a href="support.html" class="active">
+        ❓ Support
+      </a>
+
+      <a href="index.html" class="logout">
+        🔓 Logout
+      </a>
+
+    </nav>
+
+  </aside>
+
+  <main class="main-content" id="mainContent">
+
+    <section class="hero">
+
+      <h2>CattleCare Support</h2>
+
+      <p>
+        Get help with using the CattleCare system.
+      </p>
+
+    </section>
+
+    <section class="features-grid">
+
+      <div class="feature-card">
+
+        <h3>📞 Contact Support</h3>
+
+        <p>
+          Need help with your account or the system?
+          Send us a message.
+        </p>
+
+      </div>
+
+      <div class="feature-card">
+
+        <h3>🩺 Veterinary Help</h3>
+
+        <p>
+          For serious cattle health problems, contact a
+          qualified veterinarian.
+        </p>
+
+      </div>
+
+      <div class="feature-card">
+
+        <h3>💻 Technical Support</h3>
+
+        <p>
+          Report problems with logging in, appointments,
+          cattle records, or other system features.
+        </p>
+
+      </div>
+
+    </section>
+
+    <section class="content-section">
+
+      <h2>✉️ Contact Us</h2>
+
+      <form id="supportForm">
+
+        <div class="input-group">
+
+          <label for="supportName">
+            Name
+          </label>
+
+          <input
+            type="text"
+            id="supportName"
+            placeholder="Enter your name"
+            required
+          >
+
+        </div>
+
+        <div class="input-group">
+
+          <label for="supportEmail">
+            Email Address
+          </label>
+
+          <input
+            type="email"
+            id="supportEmail"
+            placeholder="Enter your email"
+            required
+          >
+
+        </div>
+
+        <div class="input-group">
+
+          <label for="supportSubject">
+            Subject
+          </label>
+
+          <select id="supportSubject" required>
+
+            <option value="">
+              Select a subject
+            </option>
+
+            <option value="Account">
+              Account / Login
+            </option>
+
+            <option value="Cattle">
+              My Cattle
+            </option>
+
+            <option value="Symptoms">
+              Symptoms
+            </option>
+
+            <option value="Diagnosis">
+              Diagnosis
+            </option>
+
+            <option value="Appointments">
+              Appointments
+            </option>
+
+            <option value="Technical">
+              Technical Problem
+            </option>
+
+            <option value="Other">
+              Other
+            </option>
+
+          </select>
+
+        </div>
+
+        <div class="input-group">
+
+          <label for="supportMessage">
+            Message
+          </label>
+
+          <textarea
+            id="supportMessage"
+            rows="7"
+            placeholder="Describe your question or problem..."
+            required
+          ></textarea>
+
+        </div>
+
+        <button
+          type="submit"
+          class="but">
+
+          Send Message
+
+        </button>
+
+      </form>
+
+    </section>
+
+    <section class="content-section">
+
+      <h2>❓ Frequently Asked Questions</h2>
+
+      <div class="feature-card">
+
+        <h3>How do I register cattle?</h3>
+
+        <p>
+          Open <strong>My Cattle</strong> from the navigation menu
+          and complete the cattle registration form.
+        </p>
+
+      </div>
+
+      <div class="feature-card">
+
+        <h3>How do I report symptoms?</h3>
+
+        <p>
+          Open <strong>Add Symptoms</strong>, select your cattle,
+          choose the symptoms you have noticed, and submit the form.
+        </p>
+
+      </div>
+
+      <div class="feature-card">
+
+        <h3>How do I book a veterinary appointment?</h3>
+
+        <p>
+          Open <strong>Appointments</strong> and complete the
+          appointment form.
+        </p>
+
+      </div>
+
+    </section>
+
+    <footer class="dashboard-footer">
+
+      <p>
+        © 2025 CattleCare for Farmers
+      </p>
+
+    </footer>
+
+  </main>
+
+  <script src="script.js"></script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+      const supportForm =
+        document.getElementById("supportForm");
+
+      supportForm.addEventListener(
+        "submit",
+        function (event) {
+
+          event.preventDefault();
+
+          const message = {
+
+            name:
+              document
+                .getElementById("supportName")
+                .value
+                .trim(),
+
+            email:
+              document
+                .getElementById("supportEmail")
+                .value
+                .trim(),
+
+            subject:
+              document
+                .getElementById("supportSubject")
+                .value,
+
+            message:
+              document
+                .getElementById("supportMessage")
+                .value
+                .trim(),
+
+            date:
+              new Date().toLocaleString()
+
+          };
+
+          const messages =
+            JSON.parse(
+              localStorage.getItem("supportMessages")
+            ) || [];
+
+          messages.push(message);
+
+          localStorage.setItem(
+            "supportMessages",
+            JSON.stringify(messages)
+          );
+
+          alert(
+            "Your support message has been submitted successfully."
+          );
+
+          supportForm.reset();
+
+        }
+      );
+
+    });
+  </script>
+
+</body>
+</html>

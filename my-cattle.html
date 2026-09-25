@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Cattle | CattleCare</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+  <!-- Sidebar Toggle -->
+  <button class="toggle-btn" id="sidebarToggle" type="button" aria-label="Open navigation menu">
+  ☰
+</button>
+
+
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+
+    <h1 class="logo">
+      🐄 Cattle<span>Care</span>
+    </h1>
+
+    <nav class="sidebar-nav">
+      <a href="main.html">🏠 Home</a>
+      <a href="my-cattle.html" class="active">🐮 My Cattle</a>
+      <a href="add-symptoms.html">➕ Add Symptoms</a>
+      <a href="ai-health-check.html">🤖 AI Health Check</a>
+      <a href="diagnosis.html">📄 Vet Diagnosis</a>
+      <a href="appointments.html">📅 Appointments</a>
+      <a href="support.html">❓ Support</a>
+      <a href="index.html" class="logout">🔓 Logout</a>
+    </nav>
+
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content" id="mainContent">
+
+    <section class="hero">
+      <h2>My Cattle</h2>
+      <p>Register your cattle and keep track of their health information.</p>
+    </section>
+
+    <!-- Add Cattle -->
+    <section class="content-section">
+
+      <h2>🐄 Register New Cattle</h2>
+
+      <form id="cattleForm">
+
+        <div class="input-group">
+          <label for="cattleName">Cattle Name / ID</label>
+          <input
+            type="text"
+            id="cattleName"
+            placeholder="Example: Cow 001"
+            required
+          >
+        </div>
+
+        <div class="input-group">
+          <label for="breed">Breed</label>
+          <input
+            type="text"
+            id="breed"
+            placeholder="Example: Brahman"
+            required
+          >
+        </div>
+
+        <div class="input-group">
+          <label for="age">Age</label>
+          <input
+            type="number"
+            id="age"
+            min="0"
+            placeholder="Age in years"
+            required
+          >
+        </div>
+
+        <div class="input-group">
+          <label for="gender">Gender</label>
+          <select id="gender" required>
+            <option value="">Select gender</option>
+            <option value="Female">Female</option>
+            <option value="Male">Male</option>
+          </select>
+        </div>
+
+        <div class="input-group">
+          <label for="healthStatus">Health Status</label>
+          <select id="healthStatus" required>
+            <option value="">Select health status</option>
+            <option value="Healthy">Healthy</option>
+            <option value="Needs Attention">Needs Attention</option>
+            <option value="Under Treatment">Under Treatment</option>
+          </select>
+        </div>
+
+        <button type="submit" class="but">
+          Add Cattle
+        </button>
+
+      </form>
+
+    </section>
+
+    <!-- Cattle List -->
+    <section class="content-section">
+
+      <h2>🐮 Registered Cattle</h2>
+
+      <div id="cattleList">
+
+        <div class="feature-card">
+          <h3>No cattle registered yet</h3>
+          <p>
+            Use the form above to register your first animal.
+          </p>
+        </div>
+
+      </div>
+
+    </section>
+
+    <footer class="dashboard-footer">
+      <p>© 2025 CattleCare for Farmers</p>
+    </footer>
+
+  </main>
+
+  <script src="script.js"></script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+      const cattleForm = document.getElementById("cattleForm");
+      const cattleList = document.getElementById("cattleList");
+
+      let cattle = JSON.parse(localStorage.getItem("cattle")) || [];
+
+      function displayCattle() {
+
+        cattleList.innerHTML = "";
+
+        if (cattle.length === 0) {
+
+          cattleList.innerHTML = `
+            <div class="feature-card">
+              <h3>No cattle registered yet</h3>
+              <p>Use the form above to register your first animal.</p>
+            </div>
+          `;
+
+          return;
+        }
+
+        cattle.forEach(function (animal, index) {
+
+          const card = document.createElement("div");
+
+          card.className = "feature-card";
+
+          card.innerHTML = `
+            <h3>🐄 ${animal.name}</h3>
+
+            <p><strong>Breed:</strong> ${animal.breed}</p>
+            <p><strong>Age:</strong> ${animal.age} years</p>
+            <p><strong>Gender:</strong> ${animal.gender}</p>
+            <p><strong>Health:</strong> ${animal.health}</p>
+
+            <button
+              class="but"
+              type="button"
+              onclick="deleteCattle(${index})">
+              Remove
+            </button>
+          `;
+
+          cattleList.appendChild(card);
+
+        });
+      }
+
+      cattleForm.addEventListener("submit", function (event) {
+
+        event.preventDefault();
+
+        const animal = {
+          name: document.getElementById("cattleName").value.trim(),
+          breed: document.getElementById("breed").value.trim(),
+          age: document.getElementById("age").value,
+          gender: document.getElementById("gender").value,
+          health: document.getElementById("healthStatus").value
+        };
+
+        cattle.push(animal);
+
+        localStorage.setItem("cattle", JSON.stringify(cattle));
+
+        cattleForm.reset();
+
+        displayCattle();
+
+        alert("Cattle registered successfully!");
+
+      });
+
+      window.deleteCattle = function (index) {
+
+        if (confirm("Are you sure you want to remove this cattle record?")) {
+
+          cattle.splice(index, 1);
+
+          localStorage.setItem("cattle", JSON.stringify(cattle));
+
+          displayCattle();
+
+        }
+
+      };
+
+      displayCattle();
+
+    });
+  </script>
+
+</body>
+</html>

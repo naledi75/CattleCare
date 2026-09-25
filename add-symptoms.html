@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add Symptoms | CattleCare</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+  <button class="toggle-btn" id="sidebarToggle" type="button" aria-label="Open navigation menu">
+    ☰
+  </button>
+
+  <aside class="sidebar" id="sidebar">
+
+
+<h1 class="logo">
+  🐄 Cattle<span>Care</span>
+</h1>
+
+<nav class="sidebar-nav">
+  <a href="main.html">🏠 Home</a>
+  <a href="my-cattle.html">🐮 My Cattle</a>
+  <a href="add-symptoms.html" class="active">➕ Add Symptoms</a>
+  <a href="ai-health-check.html">🤖 AI Health Check</a>
+  <a href="diagnosis.html">📄 Vet Diagnosis</a>
+  <a href="appointments.html">📅 Appointments</a>
+  <a href="support.html">❓ Support</a>
+  <a href="index.html" class="logout">🔓 Logout</a>
+</nav>
+
+
+  </aside>
+
+  <main class="main-content" id="mainContent">
+
+
+<section class="hero">
+  <h2>Record Cattle Symptoms</h2>
+  <p>
+    Record symptoms to help veterinary professionals understand your cattle's condition.
+  </p>
+</section>
+
+<section class="content-section">
+
+  <h2>🩺 Add Symptoms</h2>
+
+  <form id="symptomForm">
+
+    <div class="input-group">
+
+      <label for="symptomCattle">
+        Select Cattle
+      </label>
+
+      <select id="symptomCattle" required>
+        <option value="">Select cattle</option>
+      </select>
+
+    </div>
+
+    <div class="input-group">
+
+      <label>
+        Select Symptoms
+      </label>
+
+      <div class="symptoms-list">
+
+        <label>
+          <input type="checkbox" value="Loss of appetite">
+          Loss of appetite
+        </label>
+
+        <label>
+          <input type="checkbox" value="Coughing">
+          Coughing
+        </label>
+
+        <label>
+          <input type="checkbox" value="Fever">
+          Fever
+        </label>
+
+        <label>
+          <input type="checkbox" value="Diarrhea">
+          Diarrhea
+        </label>
+
+        <label>
+          <input type="checkbox" value="Limping">
+          Limping
+        </label>
+
+        <label>
+          <input type="checkbox" value="Weight loss">
+          Weight loss
+        </label>
+
+        <label>
+          <input type="checkbox" value="Weakness">
+          Weakness
+        </label>
+
+        <label>
+          <input type="checkbox" value="Difficulty breathing">
+          Difficulty breathing
+        </label>
+
+      </div>
+
+    </div>
+
+    <div class="input-group">
+
+      <label for="symptomDescription">
+        Additional Information
+      </label>
+
+      <textarea
+        id="symptomDescription"
+        rows="6"
+        placeholder="Describe anything else you have noticed..."
+      ></textarea>
+
+    </div>
+
+    <div class="input-group">
+
+      <label for="symptomDate">
+        Date Symptoms Were Noticed
+      </label>
+
+      <input
+        type="date"
+        id="symptomDate"
+        required
+      >
+
+    </div>
+
+    <button type="submit" class="but">
+      Submit Symptoms
+    </button>
+
+  </form>
+
+</section>
+
+<!-- AI PRELIMINARY ASSESSMENT -->
+<section
+  class="content-section"
+  id="aiAssessment"
+  style="display: none;"
+>
+
+  <h2>🤖 AI Preliminary Health Assessment</h2>
+
+  <p>
+    The CattleCare AI prototype has analysed the reported symptoms
+    and generated a preliminary assessment for veterinary review.
+  </p>
+
+  <div id="aiAssessmentContent"></div>
+
+  <p>
+    <strong>⚠️ Important:</strong>
+    This AI assessment is a preliminary screening tool and does not
+    replace professional veterinary diagnosis or treatment.
+  </p>
+
+</section>
+
+<section class="content-section">
+
+  <h2>⚠️ Important</h2>
+
+  <p>
+    Recording symptoms does not replace professional veterinary care.
+    If your cattle are seriously ill or experiencing an emergency,
+    contact a qualified veterinarian immediately.
+  </p>
+
+</section>
+
+<footer class="dashboard-footer">
+  <p>© 2025 CattleCare for Farmers</p>
+</footer>
+
+
+  </main>
+
+  <script src="script.js"></script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+      const cattleSelect =
+        document.getElementById("symptomCattle");
+
+      const symptomForm =
+        document.getElementById("symptomForm");
+
+      const aiAssessment =
+        document.getElementById("aiAssessment");
+
+      const aiAssessmentContent =
+        document.getElementById("aiAssessmentContent");
+
+      const cattle =
+        JSON.parse(localStorage.getItem("cattle")) || [];
+
+
+      /* =====================================================
+         LOAD REGISTERED CATTLE
+      ===================================================== */
+
+      cattle.forEach(function (animal) {
+
+        const option =
+          document.createElement("option");
+
+        option.value = animal.name;
+        option.textContent = animal.name;
+
+        cattleSelect.appendChild(option);
+
+      });
+
+
+      /* =====================================================
+         AI PROTOTYPE
+         ===================================================== */
+
+      function generateAIAssessment(symptoms, description) {
+
+        const has =
+          function (symptom) {
+            return symptoms.includes(symptom);
+          };
+
+
+        let riskLevel = "LOW";
+
+        let concern =
+          "General health concern";
+
+        let explanation =
+          "The reported symptoms should be monitored and reviewed by a veterinary professional.";
+
+        let recommendation =
+          "Continue monitoring the animal and consult a veterinarian if the symptoms continue or become worse.";
+
+
+        /*
+         * HIGH-RISK RESPIRATORY PATTERN
+         */
+
+        if (
+          has("Coughing") &&
+          has("Difficulty breathing") &&
+          (has("Fever") || has("Weakness"))
+        ) {
+
+          riskLevel = "HIGH";
+
+          concern =
+            "Possible respiratory illness";
+
+          explanation =
+            "The combination of coughing, breathing difficulty and systemic symptoms may indicate a respiratory health problem.";
+
+          recommendation =
+            "Veterinary examination is recommended as soon as possible.";
+
+        }
+
+
+        /*
+         * FEVER / SYSTEMIC ILLNESS
+         */
+
+        else if (
+          has("Fever") &&
+          (
+            has("Loss of appetite") ||
+            has("Weakness") ||
+            has("Weight loss")
+          )
+        ) {
+
+          riskLevel = "HIGH";
+
+          concern =
+            "Possible systemic illness or infection";
+
+          explanation =
+            "Fever combined with reduced appetite, weakness or weight loss can indicate an underlying health problem.";
+
+          recommendation =
+            "Arrange a veterinary examination and monitor the animal closely.";
+
+        }
+
+
+        /*
+         * DIGESTIVE PATTERN
+         */
+
+        else if (
+          has("Diarrhea") &&
+          (
+            has("Weakness") ||
+            has("Loss of appetite") ||
+            has("Weight loss")
+          )
+        ) {
+
+          riskLevel = "MODERATE";
+
+          concern =
+            "Possible digestive or gastrointestinal problem";
+
+          explanation =
+            "Diarrhea combined with weakness, reduced appetite or weight loss may indicate a digestive health issue.";
+
+          recommendation =
+            "Veterinary assessment is recommended, particularly if symptoms persist.";
+
+        }
+
+
+        /*
+         * LAMENESS PATTERN
+         */
+
+        else if (has("Limping")) {
+
+          riskLevel = "MODERATE";
+
+          concern =
+            "Possible injury or lameness";
+
+          explanation =
+            "Limping may be associated with an injury, hoof problem or musculoskeletal condition.";
+
+          recommendation =
+            "The animal should be physically examined by a veterinary professional.";
+
+        }
+
+
+        /*
+         * GENERAL WARNING
+         */
+
+        else if (
+          has("Weakness") ||
+          has("Loss of appetite") ||
+          has("Weight loss")
+        ) {
+
+          riskLevel = "MODERATE";
+
+          concern =
+            "General health deterioration";
+
+          explanation =
+            "The reported symptoms may indicate that the animal's general health requires attention.";
+
+          recommendation =
+            "Monitor the animal closely and consider veterinary assessment.";
+
+        }
+
+
+        /*
+         * DESCRIPTION CHECK
+         */
+
+        if (
+          description &&
+          description.length > 50 &&
+          riskLevel === "LOW"
+        ) {
+
+          recommendation =
+            "Additional information has been provided. A veterinarian should review the complete case.";
+
+        }
+
+
+        return {
+          riskLevel: riskLevel,
+          concern: concern,
+          explanation: explanation,
+          recommendation: recommendation
+        };
+
+      }
+
+
+      /* =====================================================
+         DISPLAY AI ASSESSMENT
+      ===================================================== */
+
+      function displayAIAssessment(
+        assessment,
+        cattleName,
+        symptoms
+      ) {
+
+        let riskClass = "";
+
+        if (assessment.riskLevel === "HIGH") {
+          riskClass = "ai-risk-high";
+        } else if (assessment.riskLevel === "MODERATE") {
+          riskClass = "ai-risk-moderate";
+        } else {
+          riskClass = "ai-risk-low";
+        }
+
+
+        aiAssessmentContent.innerHTML = `
+
+          <div class="ai-result-card">
+
+            <div class="ai-result-header">
+              <span class="ai-icon">🤖</span>
+
+              <div>
+                <h3>AI Health Screening Result</h3>
+                <p>
+                  Preliminary assessment for
+                  <strong>${escapeHTML(cattleName)}</strong>
+                </p>
+              </div>
+            </div>
+
+
+            <div class="ai-risk-box ${riskClass}">
+              <strong>Risk Level:</strong>
+              ${escapeHTML(assessment.riskLevel)}
+            </div>
+
+
+            <div class="ai-result-section">
+
+              <h3>Possible Health Concern</h3>
+
+              <p>
+                ${escapeHTML(assessment.concern)}
+              </p>
+
+            </div>
+
+
+            <div class="ai-result-section">
+
+              <h3>Symptoms Analysed</h3>
+
+              <p>
+                ${escapeHTML(symptoms.join(", "))}
+              </p>
+
+            </div>
+
+
+            <div class="ai-result-section">
+
+              <h3>AI Explanation</h3>
+
+              <p>
+                ${escapeHTML(assessment.explanation)}
+              </p>
+
+            </div>
+
+
+            <div class="ai-result-section">
+
+              <h3>AI Recommendation</h3>
+
+              <p>
+                ${escapeHTML(assessment.recommendation)}
+              </p>
+
+            </div>
+
+          </div>
+
+        `;
+
+        aiAssessment.style.display = "block";
+
+        aiAssessment.scrollIntoView({
+          behavior: "smooth"
+        });
+
+      }
+
+
+      /* =====================================================
+         SUBMIT SYMPTOMS
+      ===================================================== */
+
+      symptomForm.addEventListener(
+        "submit",
+        function (event) {
+
+          event.preventDefault();
+
+
+          const selectedSymptoms = [];
+
+
+          document
+            .querySelectorAll(
+              ".symptoms-list input[type='checkbox']:checked"
+            )
+            .forEach(function (checkbox) {
+
+              selectedSymptoms.push(
+                checkbox.value
+              );
+
+            });
+
+
+          if (selectedSymptoms.length === 0) {
+
+            alert(
+              "Please select at least one symptom."
+            );
+
+            return;
+
+          }
+
+
+          const cattleName =
+            cattleSelect.value;
+
+          const description =
+            document
+              .getElementById("symptomDescription")
+              .value
+              .trim();
+
+          const date =
+            document
+              .getElementById("symptomDate")
+              .value;
+
+
+          /*
+           * RUN AI PROTOTYPE
+           */
+
+          const aiAssessmentResult =
+            generateAIAssessment(
+              selectedSymptoms,
+              description
+            );
+
+
+          /*
+           * CREATE SYMPTOM RECORD
+           */
+
+          const symptomRecord = {
+
+            cattle: cattleName,
+
+            symptoms: selectedSymptoms,
+
+            description: description,
+
+            date: date,
+
+            status: "Awaiting Diagnosis",
+
+            aiAssessment: {
+
+              riskLevel:
+                aiAssessmentResult.riskLevel,
+
+              concern:
+                aiAssessmentResult.concern,
+
+              explanation:
+                aiAssessmentResult.explanation,
+
+              recommendation:
+                aiAssessmentResult.recommendation,
+
+              generatedDate:
+                new Date()
+                  .toISOString()
+                  .split("T")[0]
+
+            }
+
+          };
+
+
+          const records =
+            JSON.parse(
+              localStorage.getItem(
+                "symptomRecords"
+              )
+            ) || [];
+
+
+          records.push(
+            symptomRecord
+          );
+
+
+          localStorage.setItem(
+            "symptomRecords",
+            JSON.stringify(records)
+          );
+
+
+          /*
+           * SHOW AI RESULT
+           */
+
+          displayAIAssessment(
+            aiAssessmentResult,
+            cattleName,
+            selectedSymptoms
+          );
+
+
+          alert(
+            "Symptoms submitted successfully. The AI preliminary assessment has been generated for veterinary review."
+          );
+
+
+          symptomForm.reset();
+
+        }
+      );
+
+
+      /* =====================================================
+         SECURITY / DISPLAY HELPER
+      ===================================================== */
+
+      function escapeHTML(value) {
+
+        const div =
+          document.createElement("div");
+
+        div.textContent =
+          value ?? "";
+
+        return div.innerHTML;
+
+      }
+
+    });
+
+  </script>
+
+</body>
+</html>

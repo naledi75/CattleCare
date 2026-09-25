@@ -1,0 +1,1095 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>CattleCare | AI Health Check</title>
+
+    <link rel="stylesheet" href="styles.css">
+    <link
+        href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+        rel="stylesheet"
+    >
+
+    <style>
+        /* ==============================
+           AI HEALTH CHECK
+        ============================== */
+
+        .camera-card,
+        .ai-check-card {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .camera-container {
+            width: 100%;
+            max-width: 700px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        #cameraVideo,
+        #capturedImage {
+            width: 100%;
+            max-height: 420px;
+            object-fit: cover;
+            border-radius: 14px;
+            background: #111;
+        }
+
+        #capturedImage {
+            display: none;
+        }
+
+        .camera-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 18px;
+        }
+
+        .camera-btn,
+        .analyze-btn {
+            border: none;
+            border-radius: 10px;
+            padding: 12px 20px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .camera-btn {
+            background: #0f766e;
+            color: white;
+        }
+
+        .camera-btn:hover {
+            background: #0b5f59;
+        }
+
+        .camera-btn.secondary {
+            background: #64748b;
+        }
+
+        .camera-btn.secondary:hover {
+            background: #475569;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 10px;
+            font-size: 15px;
+            box-sizing: border-box;
+        }
+
+        .form-group textarea {
+            min-height: 110px;
+            resize: vertical;
+        }
+
+        .symptoms-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 10px;
+        }
+
+        .symptom-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px;
+            border: 1px solid #e2e8f0;
+            border-radius: 9px;
+            cursor: pointer;
+        }
+
+        .symptom-option:hover {
+            background: #f8fafc;
+        }
+
+        .analyze-btn {
+            width: 100%;
+            background: #0f766e;
+            color: white;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+
+        .analyze-btn:hover {
+            background: #0b5f59;
+        }
+
+        .ai-result {
+            display: none;
+            margin-top: 25px;
+            padding: 20px;
+            border-radius: 14px;
+            border: 1px solid #d1d5db;
+        }
+
+        .ai-result h3 {
+            margin-top: 0;
+        }
+
+        .risk-high {
+            border-left: 6px solid #dc2626;
+            background: #fef2f2;
+        }
+
+        .risk-moderate {
+            border-left: 6px solid #f59e0b;
+            background: #fffbeb;
+        }
+
+        .risk-low {
+            border-left: 6px solid #16a34a;
+            background: #f0fdf4;
+        }
+
+        .ai-disclaimer {
+            margin-top: 15px;
+            font-size: 13px;
+            color: #64748b;
+        }
+
+        .captured-status {
+            margin-top: 10px;
+            font-weight: 600;
+            color: #0f766e;
+        }
+
+        /* DARK MODE */
+
+        body.dark-mode .camera-card,
+        body.dark-mode .ai-check-card {
+            background: #1e293b;
+            color: #f8fafc;
+        }
+
+        body.dark-mode .form-group select,
+        body.dark-mode .form-group textarea {
+            background: #0f172a;
+            color: #f8fafc;
+            border-color: #475569;
+        }
+
+        body.dark-mode .symptom-option {
+            border-color: #475569;
+        }
+
+        body.dark-mode .symptom-option:hover {
+            background: #334155;
+        }
+
+        body.dark-mode .ai-result {
+            color: #f8fafc;
+        }
+
+        body.dark-mode .risk-high {
+            background: #450a0a;
+        }
+
+        body.dark-mode .risk-moderate {
+            background: #451a03;
+        }
+
+        body.dark-mode .risk-low {
+            background: #052e16;
+        }
+
+        @media (max-width: 768px) {
+            .camera-card,
+            .ai-check-card {
+                padding: 18px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+
+<!-- Sidebar -->
+
+<aside class="sidebar" id="sidebar">
+
+    <h1 class="logo">
+        🐄 Cattle<span>Care</span>
+    </h1>
+
+
+    <nav class="sidebar-nav">
+
+        <!-- Home -->
+
+        <a href="main.html">
+            🏠 Home
+        </a>
+
+
+        <!-- My Cattle -->
+
+        <a href="my-cattle.html">
+            🐄 My Cattle
+        </a>
+
+
+        <!-- Add Symptoms -->
+
+        <a href="add-symptoms.html">
+            🩺 Add Symptoms
+        </a>
+
+
+        <!-- AI Health Check -->
+
+        <a
+            href="ai-health-check.html"
+            class="active">
+            📷 AI Health Check
+        </a>
+
+
+        <!-- Vet Diagnosis -->
+
+        <a href="diagnosis.html">
+            📋 Vet Diagnosis
+        </a>
+
+
+        <!-- Appointments -->
+
+        <a href="appointments.html">
+            📅 Appointments
+        </a>
+
+
+        <!-- Support -->
+
+        <a href="support.html">
+            ❓ Support
+        </a>
+
+
+        <!-- Logout -->
+
+        <a
+            href="index.html"
+            class="logout">
+            🔓 Logout
+        </a>
+
+    </nav>
+
+</aside>
+
+
+
+
+    <!-- MAIN CONTENT -->
+
+    <main class="main-content" id="mainContent">
+
+        <header class="top-bar">
+
+            <button
+                class="toggle-btn"
+                id="sidebarToggle"
+                type="button"
+                aria-label="Open navigation menu"
+            >
+                ☰
+            </button>
+
+            
+
+        </header>
+
+
+        <!-- HERO -->
+
+        <section class="hero">
+
+            <h1>AI Cattle Health Check</h1>
+
+            <p>
+                Capture an image of your cattle and combine it with
+                reported symptoms for a preliminary AI health assessment.
+            </p>
+
+        </section>
+
+
+        <!-- CAMERA -->
+
+        <section class="camera-card">
+
+            <h2>📷 Scan Your Cattle</h2>
+
+            <p>
+                Position the cattle clearly in front of the camera.
+                Try to capture the animal's body and visible health indicators.
+            </p>
+
+            <div class="camera-container">
+
+                <video
+                    id="cameraVideo"
+                    autoplay
+                    playsinline
+                ></video>
+
+                <img
+                    id="capturedImage"
+                    alt="Captured cattle"
+                >
+
+                <canvas
+                    id="cameraCanvas"
+                    style="display:none;"
+                ></canvas>
+
+                <div class="camera-buttons">
+
+                    <button
+                        type="button"
+                        class="camera-btn"
+                        id="startCameraBtn"
+                    >
+                        📷 Start Camera
+                    </button>
+
+                    <button
+                        type="button"
+                        class="camera-btn"
+                        id="captureBtn"
+                    >
+                        📸 Capture
+                    </button>
+
+                    <button
+                        type="button"
+                        class="camera-btn secondary"
+                        id="retakeBtn"
+                    >
+                        🔄 Retake
+                    </button>
+
+                </div>
+
+                <div
+                    id="capturedStatus"
+                    class="captured-status"
+                ></div>
+
+            </div>
+
+        </section>
+
+
+        <!-- HEALTH INFORMATION -->
+
+        <section class="ai-check-card">
+
+            <h2>🩺 Health Information</h2>
+
+            <p>
+                Select the cattle and report any symptoms you have observed.
+            </p>
+
+
+            <form id="aiHealthForm">
+
+                <div class="form-group">
+
+                    <label for="aiCattle">
+                        Select Cattle
+                    </label>
+
+                    <select id="aiCattle" required>
+
+                        <option value="">
+                            -- Select cattle --
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Observed Symptoms
+                    </label>
+
+                    <div class="symptoms-grid">
+
+                        <label class="symptom-option">
+                            <input
+                                type="checkbox"
+                                value="Loss of appetite"
+                            >
+                            Loss of appetite
+                        </label>
+
+                        <label class="symptom-option">
+                            <input
+                                type="checkbox"
+                                value="Coughing"
+                            >
+                            Coughing
+                        </label>
+
+                        <label class="symptom-option">
+                            <input
+                                type="checkbox"
+                                value="Fever"
+                            >
+                            Fever
+                        </label>
+
+                        <label class="symptom-option">
+                            <input
+                                type="checkbox"
+                                value="Diarrhea"
+                            >
+                            Diarrhea
+                        </label>
+
+                        <label class="symptom-option">
+                            <input
+                                type="checkbox"
+                                value="Limping"
+                            >
+                            Limping
+                        </label>
+
+                        <label class="symptom-option">
+                            <input
+                                type="checkbox"
+                                value="Weight loss"
+                            >
+                            Weight loss
+                        </label>
+
+                        <label class="symptom-option">
+                            <input
+                                type="checkbox"
+                                value="Weakness"
+                            >
+                            Weakness
+                        </label>
+
+                        <label class="symptom-option">
+                            <input
+                                type="checkbox"
+                                value="Difficulty breathing"
+                            >
+                            Difficulty breathing
+                        </label>
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="aiDescription">
+                        Additional Information
+                    </label>
+
+                    <textarea
+                        id="aiDescription"
+                        placeholder="Describe anything unusual you noticed..."
+                    ></textarea>
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="analyze-btn"
+                >
+                    🤖 Run AI Health Assessment
+                </button>
+
+            </form>
+
+
+            <!-- AI RESULT -->
+
+            <div
+                id="aiResult"
+                class="ai-result"
+            >
+
+                <h3>🤖 AI Preliminary Assessment</h3>
+
+                <p>
+                    <strong>Risk Level:</strong>
+                    <span id="aiRisk"></span>
+                </p>
+
+                <p>
+                    <strong>Possible Concern:</strong>
+                    <span id="aiConcern"></span>
+                </p>
+
+                <p>
+                    <strong>Assessment:</strong>
+                    <span id="aiExplanation"></span>
+                </p>
+
+                <p>
+                    <strong>Recommendation:</strong>
+                    <span id="aiRecommendation"></span>
+                </p>
+
+                <p class="ai-disclaimer">
+                    ⚠️ This AI assessment is a preliminary screening
+                    tool and does not replace professional veterinary
+                    diagnosis or treatment.
+                </p>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <script src="script.js"></script>
+
+
+    <script>
+
+        /* ==========================================
+           CAMERA
+        ========================================== */
+
+        const video = document.getElementById("cameraVideo");
+        const canvas = document.getElementById("cameraCanvas");
+        const capturedImage = document.getElementById("capturedImage");
+
+        const startCameraBtn =
+            document.getElementById("startCameraBtn");
+
+        const captureBtn =
+            document.getElementById("captureBtn");
+
+        const retakeBtn =
+            document.getElementById("retakeBtn");
+
+        const capturedStatus =
+            document.getElementById("capturedStatus");
+
+        let cameraStream = null;
+        let capturedImageData = "";
+
+
+        startCameraBtn.addEventListener("click", async () => {
+
+            try {
+
+                cameraStream =
+                    await navigator.mediaDevices.getUserMedia({
+                        video: {
+                            facingMode: "environment"
+                        },
+                        audio: false
+                    });
+
+                video.srcObject = cameraStream;
+
+                capturedStatus.textContent =
+                    "Camera is ready. Position the cattle and press Capture.";
+
+            } catch (error) {
+
+                console.error(error);
+
+                capturedStatus.textContent =
+                    "Camera access was not available. Please allow camera permission and try again.";
+
+            }
+
+        });
+
+
+        captureBtn.addEventListener("click", () => {
+
+            if (!cameraStream) {
+
+                alert("Please start the camera first.");
+
+                return;
+            }
+
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+
+            const context = canvas.getContext("2d");
+
+            context.drawImage(
+                video,
+                0,
+                0,
+                canvas.width,
+                canvas.height
+            );
+
+            capturedImageData =
+                canvas.toDataURL("image/jpeg", 0.8);
+
+            capturedImage.src =
+                capturedImageData;
+
+            capturedImage.style.display = "block";
+
+            video.style.display = "none";
+
+            capturedStatus.textContent =
+                "✓ Cattle image captured successfully.";
+
+        });
+
+
+        retakeBtn.addEventListener("click", () => {
+
+            capturedImage.style.display = "none";
+
+            video.style.display = "block";
+
+            capturedImageData = "";
+
+            capturedStatus.textContent =
+                "Ready to capture another image.";
+
+        });
+
+
+        /* ==========================================
+           LOAD CATTLE
+        ========================================== */
+
+        const cattleSelect =
+            document.getElementById("aiCattle");
+
+        const cattle =
+            JSON.parse(localStorage.getItem("cattle")) || [];
+
+
+        if (cattle.length === 0) {
+
+            const option =
+                document.createElement("option");
+
+            option.value = "";
+
+            option.textContent =
+                "No cattle registered yet";
+
+            cattleSelect.appendChild(option);
+
+        } else {
+
+            cattle.forEach((cow, index) => {
+
+                const option =
+                    document.createElement("option");
+
+                option.value = cow.name;
+
+                option.textContent =
+                    `${cow.name} — ${cow.breed || "Unknown breed"}`;
+
+                cattleSelect.appendChild(option);
+
+            });
+
+        }
+
+
+        /* ==========================================
+           AI ASSESSMENT
+        ========================================== */
+
+        function generateAIHealthAssessment(
+            symptoms,
+            description
+        ) {
+
+            const lowerSymptoms =
+                symptoms.map(s => s.toLowerCase());
+
+            const lowerDescription =
+                description.toLowerCase();
+
+
+            let riskLevel = "LOW";
+
+            let concern =
+                "No major warning pattern detected";
+
+            let explanation =
+                "The information provided does not currently show a strong high-risk symptom pattern.";
+
+            let recommendation =
+                "Continue monitoring the cattle and record any new symptoms.";
+
+
+            /*
+             * HIGH RISK
+             */
+
+            if (
+                lowerSymptoms.includes("fever") &&
+                (
+                    lowerSymptoms.includes("difficulty breathing") ||
+                    lowerSymptoms.includes("coughing")
+                )
+            ) {
+
+                riskLevel = "HIGH";
+
+                concern =
+                    "Possible respiratory health problem";
+
+                explanation =
+                    "Fever combined with coughing or difficulty breathing can indicate a potentially significant respiratory problem.";
+
+                recommendation =
+                    "Arrange veterinary assessment as soon as possible.";
+
+            }
+
+            else if (
+                lowerSymptoms.includes("fever") &&
+                lowerSymptoms.includes("weakness") &&
+                lowerSymptoms.includes("loss of appetite")
+            ) {
+
+                riskLevel = "HIGH";
+
+                concern =
+                    "Possible systemic health problem";
+
+                explanation =
+                    "Fever together with weakness and reduced appetite may indicate that the animal requires veterinary attention.";
+
+                recommendation =
+                    "Contact a veterinarian for further examination.";
+
+            }
+
+            /*
+             * MODERATE RISK
+             */
+
+            else if (
+                lowerSymptoms.includes("diarrhea") &&
+                lowerSymptoms.includes("weakness")
+            ) {
+
+                riskLevel = "MODERATE";
+
+                concern =
+                    "Possible digestive or dehydration-related problem";
+
+                explanation =
+                    "Diarrhea combined with weakness can affect hydration and overall health.";
+
+                recommendation =
+                    "Monitor the animal closely and consider veterinary evaluation.";
+
+            }
+
+            else if (
+                lowerSymptoms.includes("limping")
+            ) {
+
+                riskLevel = "MODERATE";
+
+                concern =
+                    "Possible injury or mobility problem";
+
+                explanation =
+                    "Limping may indicate injury, hoof problems or another mobility issue.";
+
+                recommendation =
+                    "Inspect the animal safely and arrange veterinary assessment if the problem continues.";
+
+            }
+
+            else if (
+                lowerSymptoms.includes("weight loss") ||
+                lowerSymptoms.includes("loss of appetite") ||
+                lowerSymptoms.includes("weakness")
+            ) {
+
+                riskLevel = "MODERATE";
+
+                concern =
+                    "Possible general health deterioration";
+
+                explanation =
+                    "Changes in appetite, body condition or activity can be associated with several health problems.";
+
+                recommendation =
+                    "Monitor the animal and consult a veterinarian if the signs persist.";
+
+            }
+
+            /*
+             * DESCRIPTION
+             */
+
+            if (
+                lowerDescription.includes("blood") ||
+                lowerDescription.includes("collapse") ||
+                lowerDescription.includes("unable to stand")
+            ) {
+
+                riskLevel = "HIGH";
+
+                concern =
+                    "Potentially urgent visible health concern";
+
+                explanation =
+                    "The additional information contains a warning sign that should not be ignored.";
+
+                recommendation =
+                    "Seek veterinary assistance promptly.";
+
+            }
+
+
+            return {
+                riskLevel,
+                concern,
+                explanation,
+                recommendation
+            };
+
+        }
+
+
+        /* ==========================================
+           FORM SUBMISSION
+        ========================================== */
+
+        document
+            .getElementById("aiHealthForm")
+            .addEventListener("submit", function(event) {
+
+                event.preventDefault();
+
+
+                const selectedCattle =
+                    cattleSelect.value;
+
+                const selectedSymptoms =
+                    Array.from(
+                        document.querySelectorAll(
+                            '#aiHealthForm input[type="checkbox"]:checked'
+                        )
+                    ).map(
+                        checkbox => checkbox.value
+                    );
+
+                const description =
+                    document
+                        .getElementById("aiDescription")
+                        .value
+                        .trim();
+
+
+                if (!selectedCattle) {
+
+                    alert("Please select a cattle.");
+
+                    return;
+
+                }
+
+
+                if (selectedSymptoms.length === 0) {
+
+                    alert(
+                        "Please select at least one symptom."
+                    );
+
+                    return;
+
+                }
+
+
+                const assessment =
+                    generateAIHealthAssessment(
+                        selectedSymptoms,
+                        description
+                    );
+
+
+                /* DISPLAY RESULT */
+
+                const aiResult =
+                    document.getElementById("aiResult");
+
+                const aiRisk =
+                    document.getElementById("aiRisk");
+
+                const aiConcern =
+                    document.getElementById("aiConcern");
+
+                const aiExplanation =
+                    document.getElementById("aiExplanation");
+
+                const aiRecommendation =
+                    document.getElementById("aiRecommendation");
+
+
+                aiRisk.textContent =
+                    assessment.riskLevel;
+
+                aiConcern.textContent =
+                    assessment.concern;
+
+                aiExplanation.textContent =
+                    assessment.explanation;
+
+                aiRecommendation.textContent =
+                    assessment.recommendation;
+
+
+                aiResult.className =
+                    "ai-result";
+
+
+                if (
+                    assessment.riskLevel === "HIGH"
+                ) {
+
+                    aiResult.classList.add(
+                        "risk-high"
+                    );
+
+                }
+
+                else if (
+                    assessment.riskLevel === "MODERATE"
+                ) {
+
+                    aiResult.classList.add(
+                        "risk-moderate"
+                    );
+
+                }
+
+                else {
+
+                    aiResult.classList.add(
+                        "risk-low"
+                    );
+
+                }
+
+
+                aiResult.style.display = "block";
+
+
+                /* ==========================================
+                   SAVE HEALTH CHECK
+                ========================================== */
+
+                const symptomRecords =
+                    JSON.parse(
+                        localStorage.getItem(
+                            "symptomRecords"
+                        )
+                    ) || [];
+
+
+                symptomRecords.push({
+
+                    cattle: selectedCattle,
+
+                    symptoms: selectedSymptoms,
+
+                    description: description,
+
+                    date:
+                        new Date()
+                            .toISOString()
+                            .split("T")[0],
+
+                    status: "Awaiting Diagnosis",
+
+                    aiAssessment: {
+
+                        riskLevel:
+                            assessment.riskLevel,
+
+                        concern:
+                            assessment.concern,
+
+                        explanation:
+                            assessment.explanation,
+
+                        recommendation:
+                            assessment.recommendation,
+
+                        generatedDate:
+                            new Date().toISOString()
+
+                    },
+
+                    capturedImage:
+                        capturedImageData
+
+                });
+
+
+                localStorage.setItem(
+                    "symptomRecords",
+                    JSON.stringify(
+                        symptomRecords
+                    )
+                );
+
+
+                alert(
+                    "AI Health Check completed successfully. The case has been sent for veterinary review."
+                );
+
+            });
+
+
+    </script>
+
+</body>
+</html>
+

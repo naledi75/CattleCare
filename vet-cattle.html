@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Cattle | CattleCare</title>
+
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+  <button id="darkToggle" class="dark-toggle" type="button">
+    🌙 Dark Mode
+  </button>
+
+  <button class="toggle-btn" id="sidebarToggle" type="button">
+    ☰
+  </button>
+
+
+  <aside class="sidebar" id="sidebar">
+
+    <h1 class="logo">
+      🐄 Cattle<span>Care</span>
+    </h1>
+
+    <nav class="sidebar-nav">
+
+      <a href="vet-dashboard.html">
+        🏠 Dashboard
+      </a>
+
+      <a href="vet-health-cases.html">
+        📋 Health Cases
+      </a>
+
+      <a href="vet-appointments.html">
+        📅 Appointments
+      </a>
+
+      <a href="vet-cattle.html" class="active">
+        🐮 Cattle
+      </a>
+
+      <a href="vet-messages.html">
+        💬 Messages
+      </a>
+
+      <a href="vet-reports.html">
+        📊 Reports
+      </a>
+
+      <a href="vet-support.html">
+        ❓ Support
+      </a>
+
+      <a href="index.html" class="logout">
+        🔓 Logout
+      </a>
+
+    </nav>
+
+  </aside>
+
+
+  <main class="main-content" id="mainContent">
+
+    <section class="hero">
+
+      <h2>🐮 Registered Cattle</h2>
+
+      <p>
+        View cattle registered by farmers in the CattleCare system.
+      </p>
+
+    </section>
+
+
+    <section class="content-section">
+
+      <h2>All Registered Cattle</h2>
+
+      <div id="cattleList">
+
+        <div class="feature-card">
+
+          <h3>No cattle registered</h3>
+
+          <p>
+            Cattle added by farmers will appear here.
+          </p>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <footer class="dashboard-footer">
+
+      <p>
+        © 2025 CattleCare Veterinary Portal
+      </p>
+
+    </footer>
+
+  </main>
+
+
+  <script src="script.js"></script>
+
+  <script>
+
+    document.addEventListener("DOMContentLoaded", function () {
+
+      const cattleList =
+        document.getElementById("cattleList");
+
+
+      const cattle =
+        JSON.parse(
+          localStorage.getItem("cattle")
+        ) || [];
+
+
+      if (cattle.length === 0) {
+        return;
+      }
+
+
+      cattleList.innerHTML = "";
+
+
+      cattle.forEach(function (animal, index) {
+
+        const card =
+          document.createElement("div");
+
+        card.className =
+          "feature-card";
+
+
+        card.innerHTML = `
+
+          <h3>
+            🐄 ${escapeHTML(animal.name)}
+          </h3>
+
+          <p>
+            <strong>Breed:</strong>
+            ${escapeHTML(animal.breed)}
+          </p>
+
+          <p>
+            <strong>Age:</strong>
+            ${escapeHTML(animal.age)}
+          </p>
+
+          <p>
+            <strong>Gender:</strong>
+            ${escapeHTML(animal.gender)}
+          </p>
+
+          <p>
+            <strong>Health Status:</strong>
+            ${escapeHTML(animal.health)}
+          </p>
+
+        `;
+
+
+        cattleList.appendChild(card);
+
+      });
+
+
+      function escapeHTML(value) {
+
+        const div =
+          document.createElement("div");
+
+        div.textContent =
+          value ?? "";
+
+        return div.innerHTML;
+
+      }
+
+    });
+
+  </script>
+
+</body>
+</html>

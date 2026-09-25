@@ -1,0 +1,606 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Vet Appointments | CattleCare</title>
+
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+  <!-- Sidebar Toggle -->
+  <button
+    class="toggle-btn"
+    id="sidebarToggle"
+    type="button"
+    aria-label="Open navigation menu">
+    ☰
+  </button>
+
+
+  <!-- Dark Mode -->
+  <button
+    id="darkToggle"
+    class="dark-toggle"
+    type="button">
+    🌙 Dark Mode
+  </button>
+
+
+  <!-- Vet Sidebar -->
+  <aside class="sidebar" id="sidebar">
+
+    <h1 class="logo">
+      🐄 Cattle<span>Care</span>
+    </h1>
+
+    <nav class="sidebar-nav">
+
+      <a href="vet-dashboard.html">
+        🏠 Dashboard
+      </a>
+
+      <a href="vet-dashboard.html">
+        📋 Health Cases
+      </a>
+
+      <a href="vet-appointments.html" class="active">
+        📅 Appointments
+      </a>
+
+      <a href="#">
+        🐮 Cattle
+      </a>
+
+      <a href="#">
+        💬 Messages
+      </a>
+
+      <a href="#">
+        📊 Reports
+      </a>
+
+      <a href="support.html">
+        ❓ Support
+      </a>
+
+      <a href="index.html" class="logout">
+        🔓 Logout
+      </a>
+
+    </nav>
+
+  </aside>
+
+
+  <!-- Main Content -->
+  <main class="main-content" id="mainContent">
+
+
+    <!-- Page Header -->
+    <section class="hero">
+
+      <h2>Veterinary Appointments</h2>
+
+      <p>
+        View and manage appointment requests submitted by farmers.
+      </p>
+
+    </section>
+
+
+    <!-- Appointment Summary -->
+    <section class="vet-summary-grid">
+
+      <div class="vet-summary-card">
+
+        <span class="vet-summary-icon">
+          📅
+        </span>
+
+        <div>
+
+          <h3 id="totalAppointments">
+            0
+          </h3>
+
+          <p>
+            Total Appointments
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <div class="vet-summary-card">
+
+        <span class="vet-summary-icon">
+          🟠
+        </span>
+
+        <div>
+
+          <h3 id="pendingAppointments">
+            0
+          </h3>
+
+          <p>
+            Pending
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <div class="vet-summary-card">
+
+        <span class="vet-summary-icon">
+          🟢
+        </span>
+
+        <div>
+
+          <h3 id="acceptedAppointments">
+            0
+          </h3>
+
+          <p>
+            Accepted
+          </p>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- Appointment Requests -->
+    <section class="content-section">
+
+      <h2>
+        📋 Appointment Requests
+      </h2>
+
+      <p>
+        Appointment requests submitted by farmers will appear here.
+      </p>
+
+
+      <div id="appointmentList">
+
+        <div class="feature-card">
+
+          <h3>
+            No appointment requests
+          </h3>
+
+          <p>
+            New appointment requests will appear here.
+          </p>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- Footer -->
+    <footer class="dashboard-footer">
+
+      <p>
+        © 2025 CattleCare for Farmers
+      </p>
+
+    </footer>
+
+  </main>
+
+
+  <script src="script.js"></script>
+
+
+  <script>
+
+    document.addEventListener(
+      "DOMContentLoaded",
+      function () {
+
+
+        const appointmentList =
+          document.getElementById(
+            "appointmentList"
+          );
+
+
+        const totalAppointments =
+          document.getElementById(
+            "totalAppointments"
+          );
+
+
+        const pendingAppointments =
+          document.getElementById(
+            "pendingAppointments"
+          );
+
+
+        const acceptedAppointments =
+          document.getElementById(
+            "acceptedAppointments"
+          );
+
+
+        let appointments =
+          JSON.parse(
+            localStorage.getItem("appointments")
+          ) || [];
+
+
+        /*
+          Update the appointment numbers
+        */
+
+        function updateSummary() {
+
+          const total =
+            appointments.length;
+
+
+          const pending =
+            appointments.filter(
+              function (appointment) {
+
+                return appointment.status === "Pending";
+
+              }
+            ).length;
+
+
+          const accepted =
+            appointments.filter(
+              function (appointment) {
+
+                return appointment.status === "Accepted";
+
+              }
+            ).length;
+
+
+          totalAppointments.textContent =
+            total;
+
+
+          pendingAppointments.textContent =
+            pending;
+
+
+          acceptedAppointments.textContent =
+            accepted;
+
+        }
+
+
+        /*
+          Display appointments
+        */
+
+        function displayAppointments() {
+
+          appointmentList.innerHTML = "";
+
+
+          if (appointments.length === 0) {
+
+            appointmentList.innerHTML = `
+
+              <div class="feature-card">
+
+                <h3>
+                  No appointment requests
+                </h3>
+
+                <p>
+                  New appointment requests
+                  will appear here.
+                </p>
+
+              </div>
+
+            `;
+
+            updateSummary();
+
+            return;
+
+          }
+
+
+          appointments.forEach(
+            function (appointment, index) {
+
+
+              const card =
+                document.createElement("div");
+
+
+              card.className =
+                "feature-card vet-appointment-card";
+
+
+              card.innerHTML = `
+
+                <h3>
+                  📅 ${escapeHTML(appointment.cattle)}
+                </h3>
+
+
+                <p>
+                  <strong>
+                    Veterinarian / Clinic:
+                  </strong>
+
+                  ${escapeHTML(appointment.vet)}
+                </p>
+
+
+                <p>
+                  <strong>
+                    Date:
+                  </strong>
+
+                  ${escapeHTML(appointment.date)}
+                </p>
+
+
+                <p>
+                  <strong>
+                    Time:
+                  </strong>
+
+                  ${escapeHTML(appointment.time)}
+                </p>
+
+
+                <p>
+                  <strong>
+                    Reason:
+                  </strong>
+
+                  ${escapeHTML(appointment.reason)}
+                </p>
+
+
+                <p>
+                  <strong>
+                    Status:
+                  </strong>
+
+                  <span class="appointment-status">
+                    ${escapeHTML(appointment.status)}
+                  </span>
+                </p>
+
+
+                <div class="appointment-actions">
+
+                  ${
+                    appointment.status === "Pending"
+                      ? `
+
+                        <button
+                          type="button"
+                          class="but"
+                          onclick="updateAppointment(
+                            ${index},
+                            'Accepted'
+                          )">
+
+                          Accept
+
+                        </button>
+
+
+                        <button
+                          type="button"
+                          class="but reschedule-button"
+                          onclick="requestReschedule(
+                            ${index}
+                          )">
+
+                          Request Reschedule
+
+                        </button>
+
+
+                        <button
+                          type="button"
+                          class="but decline-button"
+                          onclick="updateAppointment(
+                            ${index},
+                            'Declined'
+                          )">
+
+                          Decline
+
+                        </button>
+
+                      `
+                      : ""
+                  }
+
+
+                  ${
+                    appointment.status === "Accepted"
+                      ? `
+
+                        <button
+                          type="button"
+                          class="but"
+                          onclick="updateAppointment(
+                            ${index},
+                            'Completed'
+                          )">
+
+                          Mark Completed
+
+                        </button>
+
+                      `
+                      : ""
+                  }
+
+
+                  ${
+                    appointment.status === "Reschedule Requested"
+                      ? `
+
+                        <p>
+                          <strong>
+                            Waiting for farmer to select a new time.
+                          </strong>
+                        </p>
+
+                      `
+                      : ""
+                  }
+
+
+                  ${
+                    appointment.status === "Declined"
+                      ? `
+
+                        <p>
+                          This appointment was declined.
+                        </p>
+
+                      `
+                      : ""
+                  }
+
+
+                  ${
+                    appointment.status === "Completed"
+                      ? `
+
+                        <p>
+                          Appointment completed.
+                        </p>
+
+                      `
+                      : ""
+                  }
+
+                </div>
+
+              `;
+
+
+              appointmentList.appendChild(card);
+
+            }
+          );
+
+
+          updateSummary();
+
+        }
+
+
+        /*
+          Update appointment status
+        */
+
+        window.updateAppointment =
+          function (index, newStatus) {
+
+
+            appointments[index].status =
+              newStatus;
+
+
+            localStorage.setItem(
+              "appointments",
+              JSON.stringify(appointments)
+            );
+
+
+            displayAppointments();
+
+
+            alert(
+              "Appointment status updated to: " +
+              newStatus
+            );
+
+          };
+
+
+        /*
+          Request reschedule
+        */
+
+        window.requestReschedule =
+          function (index) {
+
+
+            appointments[index].status =
+              "Reschedule Requested";
+
+
+            localStorage.setItem(
+              "appointments",
+              JSON.stringify(appointments)
+            );
+
+
+            displayAppointments();
+
+
+            alert(
+              "Reschedule request sent to the farmer."
+            );
+
+          };
+
+
+        /*
+          Protect text displayed on the page
+        */
+
+        function escapeHTML(value) {
+
+          const div =
+            document.createElement("div");
+
+
+          div.textContent =
+            value ?? "";
+
+
+          return div.innerHTML;
+
+        }
+
+
+        /*
+          Initial display
+        */
+
+        displayAppointments();
+
+      }
+    );
+
+  </script>
+
+</body>
+</html>
+

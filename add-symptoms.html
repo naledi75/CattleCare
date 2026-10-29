@@ -167,23 +167,13 @@
 
   <div id="aiAssessmentContent"></div>
 
-  <p>
-    <strong>⚠️ Important:</strong>
-    This AI assessment is a preliminary screening tool and does not
-    replace professional veterinary diagnosis or treatment.
-  </p>
+  
 
 </section>
 
 <section class="content-section">
 
-  <h2>⚠️ Important</h2>
-
-  <p>
-    Recording symptoms does not replace professional veterinary care.
-    If your cattle are seriously ill or experiencing an emergency,
-    contact a qualified veterinarian immediately.
-  </p>
+  
 
 </section>
 
@@ -572,19 +562,26 @@
            * CREATE SYMPTOM RECORD
            */
 
-          const symptomRecord = {
+            const symptomRecord = {
 
-            cattle: cattleName,
+  id: "CASE-" + Date.now(),
 
-            symptoms: selectedSymptoms,
+  cattle: cattleName,
+  symptoms: selectedSymptoms,
+  description: description,
+  date: date,
 
-            description: description,
+  status: "Awaiting Vet Review",
 
-            date: date,
+  assignedVet: null,
+  diagnosis: "",
+  advice: "",
+  consultationType: null,
+  appointmentEnabled: false,
 
-            status: "Awaiting Diagnosis",
+  createdAt: new Date().toISOString(),
 
-            aiAssessment: {
+  aiAssessment: {
 
               riskLevel:
                 aiAssessmentResult.riskLevel,
@@ -639,8 +636,8 @@
 
 
           alert(
-            "Symptoms submitted successfully. The AI preliminary assessment has been generated for veterinary review."
-          );
+  "Your health case has been submitted. A registered veterinarian will be notified for review."
+);
 
 
           symptomForm.reset();

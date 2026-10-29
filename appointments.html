@@ -1,20 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>Appointments | CattleCare</title>
+
   <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
 
-  <button class="toggle-btn" id="sidebarToggle" type="button" aria-label="Open navigation menu">
-  ☰
-</button>
+  <!-- Sidebar Toggle -->
+  <button
+    class="toggle-btn"
+    id="sidebarToggle"
+    type="button"
+    aria-label="Open navigation menu">
+    ☰
+  </button>
 
-  
-
+  <!-- Farmer Sidebar -->
   <aside class="sidebar" id="sidebar">
 
     <h1 class="logo">
@@ -22,6 +29,7 @@
     </h1>
 
     <nav class="sidebar-nav">
+
       <a href="main.html">🏠 Home</a>
       <a href="my-cattle.html">🐮 My Cattle</a>
       <a href="add-symptoms.html">➕ Add Symptoms</a>
@@ -30,52 +38,73 @@
       <a href="appointments.html" class="active">📅 Appointments</a>
       <a href="support.html">❓ Support</a>
       <a href="index.html" class="logout">🔓 Logout</a>
+
     </nav>
 
   </aside>
 
+  <!-- Main Content -->
   <main class="main-content" id="mainContent">
 
+    <!-- Introduction -->
     <section class="hero">
 
       <h2>Veterinary Appointments</h2>
 
       <p>
-        Schedule and manage veterinary appointments for your cattle.
+        Book online consultations or physical appointments
+        after receiving recommendations from your veterinarian.
       </p>
 
     </section>
 
+    <!-- Available Cases -->
     <section class="content-section">
 
-      <h2>📅 Book an Appointment</h2>
+      <h2>🩺 Cases Ready for Consultation</h2>
+
+      <p>
+        These are health cases for which your veterinarian
+        has recommended a consultation.
+      </p>
+
+      <div id="availableCases">
+
+        <div class="feature-card">
+          <h3>No consultations available yet</h3>
+          <p>
+            Once your veterinarian provides recommendations
+            and offers a consultation, the case will appear here.
+          </p>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- Booking Form -->
+    <section
+      class="content-section"
+      id="bookingSection"
+      style="display:none;">
+
+      <h2>📅 Book Your Consultation</h2>
+
+      <div id="bookingCaseDetails"></div>
 
       <form id="appointmentForm">
 
+        <input type="hidden" id="appointmentCaseId">
+
         <div class="input-group">
 
-          <label for="appointmentCattle">
-            Cattle
+          <label for="consultationMode">
+            Consultation Type
           </label>
 
-          <select id="appointmentCattle" required>
-            <option value="">Select cattle</option>
+          <select id="consultationMode" required>
+            <option value="">Select consultation type</option>
           </select>
-
-        </div>
-
-        <div class="input-group">
-
-          <label for="vetName">
-            Veterinarian / Clinic
-          </label>
-
-          <input
-            type="text"
-            id="vetName"
-            placeholder="Enter veterinarian or clinic name"
-            required
-          >
 
         </div>
 
@@ -110,48 +139,57 @@
         <div class="input-group">
 
           <label for="appointmentReason">
-            Reason for Appointment
+            Reason for Consultation
           </label>
 
           <textarea
             id="appointmentReason"
-            rows="5"
-            placeholder="Describe the reason for the appointment..."
-            required
+            rows="4"
+            placeholder="Add any additional information..."
           ></textarea>
 
         </div>
 
         <button type="submit" class="but">
-          Book Appointment
+          📅 Submit Appointment Request
+        </button>
+
+        <button
+          type="button"
+          class="but"
+          id="closeBookingButton">
+
+          Cancel
+
         </button>
 
       </form>
 
     </section>
 
+    <!-- Existing Appointments -->
     <section class="content-section">
 
-      <h2>📋 Upcoming Appointments</h2>
+      <h2>📋 My Appointments</h2>
 
       <div id="appointmentList">
 
         <div class="feature-card">
-
-          <h3>No appointments</h3>
-
+          <h3>No appointments yet</h3>
           <p>
-            Your scheduled appointments will appear here.
+            Your appointment requests will appear here.
           </p>
-
         </div>
 
       </div>
 
     </section>
 
+    <!-- Footer -->
     <footer class="dashboard-footer">
-      <p>© 2025 CattleCare for Farmers</p>
+
+      <p>© 2026 CattleCare for Farmers</p>
+
     </footer>
 
   </main>
@@ -159,10 +197,21 @@
   <script src="script.js"></script>
 
   <script>
+
     document.addEventListener("DOMContentLoaded", function () {
 
-      const cattleSelect =
-        document.getElementById("appointmentCattle");
+      /* ==========================================
+         ELEMENTS
+      ========================================== */
+
+      const availableCases =
+        document.getElementById("availableCases");
+
+      const bookingSection =
+        document.getElementById("bookingSection");
+
+      const bookingCaseDetails =
+        document.getElementById("bookingCaseDetails");
 
       const appointmentForm =
         document.getElementById("appointmentForm");
@@ -170,43 +219,591 @@
       const appointmentList =
         document.getElementById("appointmentList");
 
-      const cattle =
-        JSON.parse(localStorage.getItem("cattle")) || [];
+      const consultationMode =
+        document.getElementById("consultationMode");
 
-      const appointments =
-        JSON.parse(localStorage.getItem("appointments")) || [];
+      const appointmentDate =
+        document.getElementById("appointmentDate");
 
-      cattle.forEach(function (animal) {
+      const appointmentTime =
+        document.getElementById("appointmentTime");
 
-        const option =
-          document.createElement("option");
+      const appointmentReason =
+        document.getElementById("appointmentReason");
 
-        option.value = animal.name;
+      const appointmentCaseId =
+        document.getElementById("appointmentCaseId");
 
-        option.textContent = animal.name;
+      const closeBookingButton =
+        document.getElementById("closeBookingButton");
 
-        cattleSelect.appendChild(option);
 
-      });
+      /* ==========================================
+         LOAD DATA
+      ========================================== */
 
-      function displayAppointments() {
+      function loadData(key) {
 
-        appointmentList.innerHTML = "";
+        try {
 
-        if (appointments.length === 0) {
+          const data =
+            JSON.parse(localStorage.getItem(key));
 
-          appointmentList.innerHTML = `
+          return Array.isArray(data) ? data : [];
+
+        } catch (error) {
+
+          console.error("Could not load " + key, error);
+
+          return [];
+
+        }
+
+      }
+
+
+      let symptomRecords =
+        loadData("symptomRecords");
+
+      let appointments =
+        loadData("appointments");
+
+
+      /* ==========================================
+         SAVE DATA
+      ========================================== */
+
+      function saveCases() {
+
+        localStorage.setItem(
+          "symptomRecords",
+          JSON.stringify(symptomRecords)
+        );
+
+      }
+
+
+      function saveAppointments() {
+
+        localStorage.setItem(
+          "appointments",
+          JSON.stringify(appointments)
+        );
+
+      }
+
+
+      /* ==========================================
+         ESCAPE HTML
+      ========================================== */
+
+      function escapeHTML(value) {
+
+        const div =
+          document.createElement("div");
+
+        div.textContent = value ?? "";
+
+        return div.innerHTML;
+
+      }
+
+
+      /* ==========================================
+         CHECK IF CASE ALREADY HAS A BOOKING
+      ========================================== */
+
+      function hasActiveAppointment(caseId) {
+
+        return appointments.some(function (appointment) {
+
+          return (
+            appointment.caseId === caseId &&
+            ![
+              "Cancelled",
+              "Declined",
+              "Completed"
+            ].includes(appointment.status)
+          );
+
+        });
+
+      }
+
+
+      /* ==========================================
+         FIND CASE
+      ========================================== */
+
+      function findCase(caseId) {
+
+        return symptomRecords.find(function (record) {
+
+          return record.id === caseId;
+
+        });
+
+      }
+
+
+      /* ==========================================
+         DETERMINE AVAILABLE CONSULTATION TYPES
+      ========================================== */
+
+      function getAvailableModes(record) {
+
+        if (record.consultationType === "Both") {
+          return ["Online", "Physical"];
+        }
+
+        if (
+          record.consultationType === "Online" ||
+          record.consultationType === "Physical"
+        ) {
+          return [record.consultationType];
+        }
+
+        return [];
+
+      }
+
+
+      /* ==========================================
+         LOAD CASES READY FOR APPOINTMENTS
+      ========================================== */
+
+      function displayAvailableCases() {
+
+        availableCases.innerHTML = "";
+
+        const eligibleCases =
+          symptomRecords.filter(function (record) {
+
+            return (
+              record.appointmentEnabled === true &&
+              record.assignedVet &&
+              record.diagnosis &&
+              record.advice &&
+              getAvailableModes(record).length > 0 &&
+              !hasActiveAppointment(record.id)
+            );
+
+          });
+
+
+        if (eligibleCases.length === 0) {
+
+          availableCases.innerHTML = `
+
             <div class="feature-card">
-              <h3>No appointments</h3>
+
+              <h3>No consultations available yet</h3>
+
               <p>
-                Your scheduled appointments will appear here.
+                You can book an appointment after your
+                veterinarian reviews your case and provides
+                recommendations.
               </p>
+
             </div>
+
           `;
 
           return;
 
         }
+
+
+        eligibleCases.forEach(function (record) {
+
+          const card =
+            document.createElement("div");
+
+          card.className = "feature-card";
+
+          const modes =
+            getAvailableModes(record).join(" or ");
+
+
+          card.innerHTML = `
+
+            <h3>
+              🐄 ${escapeHTML(record.cattle)}
+            </h3>
+
+            <p>
+              <strong>Case ID:</strong>
+              ${escapeHTML(record.id)}
+            </p>
+
+            <p>
+              <strong>Assigned Veterinarian:</strong>
+              ${escapeHTML(record.assignedVet)}
+            </p>
+
+            <p>
+              <strong>Veterinary Assessment:</strong>
+              ${escapeHTML(record.diagnosis)}
+            </p>
+
+            <p>
+              <strong>Veterinary Recommendations:</strong>
+              ${escapeHTML(record.advice)}
+            </p>
+
+            <p>
+              <strong>Available Consultation:</strong>
+              ${escapeHTML(modes)}
+            </p>
+
+            <button
+              type="button"
+              class="but book-case"
+              data-id="${escapeHTML(record.id)}">
+
+              📅 Book Consultation
+
+            </button>
+
+          `;
+
+
+          availableCases.appendChild(card);
+
+        });
+
+
+        document
+          .querySelectorAll(".book-case")
+          .forEach(function (button) {
+
+            button.addEventListener("click", function () {
+
+              openBooking(button.dataset.id);
+
+            });
+
+          });
+
+      }
+
+
+      /* ==========================================
+         OPEN BOOKING FORM
+      ========================================== */
+
+      function openBooking(caseId) {
+
+        const record = findCase(caseId);
+
+        if (!record) {
+
+          alert("Health case not found.");
+
+          return;
+
+        }
+
+
+        if (
+          !record.appointmentEnabled ||
+          !record.assignedVet
+        ) {
+
+          alert(
+            "This case is not yet approved for appointment booking."
+          );
+
+          return;
+
+        }
+
+
+        if (hasActiveAppointment(caseId)) {
+
+          alert(
+            "An active appointment already exists for this case."
+          );
+
+          return;
+
+        }
+
+
+        const modes =
+          getAvailableModes(record);
+
+
+        if (modes.length === 0) {
+
+          alert("No consultation options are available.");
+
+          return;
+
+        }
+
+
+        appointmentForm.reset();
+
+        appointmentCaseId.value = caseId;
+
+
+        bookingCaseDetails.innerHTML = `
+
+          <div class="feature-card">
+
+            <h3>🐄 ${escapeHTML(record.cattle)}</h3>
+
+            <p>
+              <strong>Assigned Veterinarian:</strong>
+              ${escapeHTML(record.assignedVet)}
+            </p>
+
+            <p>
+              <strong>Recommendations:</strong>
+              ${escapeHTML(record.advice)}
+            </p>
+
+          </div>
+
+        `;
+
+
+        consultationMode.innerHTML =
+          '<option value="">Select consultation type</option>';
+
+
+        modes.forEach(function (mode) {
+
+          const option =
+            document.createElement("option");
+
+          option.value = mode;
+
+          option.textContent =
+            mode === "Online"
+              ? "Online Consultation"
+              : "Physical Appointment at Practice";
+
+          consultationMode.appendChild(option);
+
+        });
+
+
+        // Do not allow booking in the past.
+
+        const today =
+          new Date().toLocaleDateString("en-CA");
+
+        appointmentDate.min = today;
+
+
+        bookingSection.style.display = "block";
+
+        bookingSection.scrollIntoView({
+          behavior: "smooth"
+        });
+
+      }
+
+
+      /* ==========================================
+         SUBMIT APPOINTMENT REQUEST
+      ========================================== */
+
+      appointmentForm.addEventListener(
+        "submit",
+        function (event) {
+
+          event.preventDefault();
+
+
+          symptomRecords =
+            loadData("symptomRecords");
+
+          appointments =
+            loadData("appointments");
+
+
+          const caseId =
+            appointmentCaseId.value;
+
+
+          const record =
+            findCase(caseId);
+
+
+          if (!record) {
+
+            alert("The selected health case could not be found.");
+
+            return;
+
+          }
+
+
+          if (
+            !record.appointmentEnabled ||
+            !record.assignedVet
+          ) {
+
+            alert(
+              "Your veterinarian has not enabled appointment booking for this case."
+            );
+
+            return;
+
+          }
+
+
+          if (hasActiveAppointment(caseId)) {
+
+            alert(
+              "An appointment request already exists for this case."
+            );
+
+            return;
+
+          }
+
+
+          const selectedMode =
+            consultationMode.value;
+
+
+          const allowedModes =
+            getAvailableModes(record);
+
+
+          if (!allowedModes.includes(selectedMode)) {
+
+            alert(
+              "Please select a consultation type offered by your veterinarian."
+            );
+
+            return;
+
+          }
+
+
+          const date =
+            appointmentDate.value;
+
+          const time =
+            appointmentTime.value;
+
+
+          if (!date || !time) {
+
+            alert("Please select an appointment date and time.");
+
+            return;
+
+          }
+
+
+          const selectedDateTime =
+            new Date(date + "T" + time);
+
+
+          if (selectedDateTime <= new Date()) {
+
+            alert(
+              "Please select a future appointment date and time."
+            );
+
+            return;
+
+          }
+
+
+          const appointment = {
+
+            id: "APT-" + Date.now(),
+
+            caseId: record.id,
+
+            cattle: record.cattle,
+
+            vet: record.assignedVet,
+
+            consultationType: selectedMode,
+
+            date: date,
+
+            time: time,
+
+            reason:
+              appointmentReason.value.trim() ||
+              "Follow-up for cattle health case " + record.id,
+
+            status: "Pending",
+
+            createdAt: new Date().toISOString()
+
+          };
+
+
+          appointments.push(appointment);
+
+
+          // Update the related health case.
+
+          record.status = "Appointment Requested";
+
+
+          saveAppointments();
+
+          saveCases();
+
+
+          appointmentForm.reset();
+
+          bookingSection.style.display = "none";
+
+
+          displayAvailableCases();
+
+          displayAppointments();
+
+
+          alert(
+            "Your appointment request has been submitted. Your veterinarian will review and respond to your booking."
+          );
+
+        }
+      );
+
+
+      /* ==========================================
+         DISPLAY FARMER APPOINTMENTS
+      ========================================== */
+
+      function displayAppointments() {
+
+        appointmentList.innerHTML = "";
+
+
+        if (appointments.length === 0) {
+
+          appointmentList.innerHTML = `
+
+            <div class="feature-card">
+
+              <h3>No appointments yet</h3>
+
+              <p>
+                Your appointment requests will appear here.
+              </p>
+
+            </div>
+
+          `;
+
+          return;
+
+        }
+
 
         appointments.forEach(function (appointment, index) {
 
@@ -215,128 +812,215 @@
 
           card.className = "feature-card";
 
+
+          const status =
+            appointment.status || "Pending";
+
+
+          const consultation =
+            appointment.consultationType || "Not specified";
+
+
           card.innerHTML = `
 
-            <h3>📅 ${appointment.cattle}</h3>
+            <h3>
+              📅 ${escapeHTML(appointment.cattle)}
+            </h3>
+
+            <p>
+              <strong>Appointment ID:</strong>
+              ${escapeHTML(appointment.id || "Not available")}
+            </p>
+
+            <p>
+              <strong>Health Case:</strong>
+              ${escapeHTML(appointment.caseId || "Not linked")}
+            </p>
 
             <p>
               <strong>Veterinarian:</strong>
-              ${appointment.vet}
+              ${escapeHTML(appointment.vet)}
+            </p>
+
+            <p>
+              <strong>Consultation Type:</strong>
+              ${escapeHTML(consultation)}
             </p>
 
             <p>
               <strong>Date:</strong>
-              ${appointment.date}
+              ${escapeHTML(appointment.date)}
             </p>
 
             <p>
               <strong>Time:</strong>
-              ${appointment.time}
+              ${escapeHTML(appointment.time)}
             </p>
 
             <p>
               <strong>Reason:</strong>
-              ${appointment.reason}
+              ${escapeHTML(appointment.reason)}
             </p>
 
             <p>
               <strong>Status:</strong>
-              ${appointment.status}
+              ${escapeHTML(status)}
             </p>
 
-            <button
-              class="but"
-              type="button"
-              onclick="cancelAppointment(${index})">
-              Cancel Appointment
-            </button>
+            ${
+              status === "Pending"
+                ? `
+                  <button
+                    type="button"
+                    class="but cancel-appointment"
+                    data-index="${index}">
+
+                    Cancel Appointment Request
+
+                  </button>
+                `
+                : ""
+            }
 
           `;
+
 
           appointmentList.appendChild(card);
 
         });
 
+
+        document
+          .querySelectorAll(".cancel-appointment")
+          .forEach(function (button) {
+
+            button.addEventListener("click", function () {
+
+              cancelAppointment(
+                Number(button.dataset.index)
+              );
+
+            });
+
+          });
+
       }
 
-      appointmentForm.addEventListener(
-        "submit",
-        function (event) {
 
-          event.preventDefault();
+      /* ==========================================
+         CANCEL APPOINTMENT
+      ========================================== */
 
-          const appointment = {
+      function cancelAppointment(index) {
 
-            cattle:
-              cattleSelect.value,
+        appointments =
+          loadData("appointments");
 
-            vet:
-              document
-                .getElementById("vetName")
-                .value
-                .trim(),
+        symptomRecords =
+          loadData("symptomRecords");
 
-            date:
-              document
-                .getElementById("appointmentDate")
-                .value,
 
-            time:
-              document
-                .getElementById("appointmentTime")
-                .value,
+        const appointment =
+          appointments[index];
 
-            reason:
-              document
-                .getElementById("appointmentReason")
-                .value
-                .trim(),
 
-            status: "Pending"
+        if (!appointment) return;
 
-          };
 
-          appointments.push(appointment);
+        if (appointment.status !== "Pending") {
 
-          localStorage.setItem(
-            "appointments",
-            JSON.stringify(appointments)
+          alert(
+            "Only pending appointment requests can be cancelled here."
           );
 
+          return;
+
+        }
+
+
+        const confirmed = confirm(
+          "Are you sure you want to cancel this appointment request?"
+        );
+
+
+        if (!confirmed) return;
+
+
+        appointment.status = "Cancelled";
+
+        appointment.cancelledDate =
+          new Date().toISOString();
+
+
+        const record =
+          findCase(appointment.caseId);
+
+
+        if (record && record.status === "Appointment Requested") {
+
+          record.status = "Recommendations Provided";
+
+        }
+
+
+        saveAppointments();
+
+        saveCases();
+
+
+        displayAppointments();
+
+        displayAvailableCases();
+
+
+        alert("Appointment request cancelled.");
+
+      }
+
+
+      /* ==========================================
+         CLOSE BOOKING FORM
+      ========================================== */
+
+      closeBookingButton.addEventListener(
+        "click",
+        function () {
+
+          bookingSection.style.display = "none";
+
           appointmentForm.reset();
-
-          displayAppointments();
-
-          alert("Appointment booked successfully.");
 
         }
       );
 
-      window.cancelAppointment =
-        function (index) {
 
-          if (
-            confirm(
-              "Are you sure you want to cancel this appointment?"
-            )
-          ) {
+      /* ==========================================
+         REFRESH DATA WHEN STORAGE CHANGES
+      ========================================== */
 
-            appointments.splice(index, 1);
+      window.addEventListener("storage", function () {
 
-            localStorage.setItem(
-              "appointments",
-              JSON.stringify(appointments)
-            );
+        symptomRecords = loadData("symptomRecords");
 
-            displayAppointments();
+        appointments = loadData("appointments");
 
-          }
+        displayAvailableCases();
 
-        };
+        displayAppointments();
+
+      });
+
+
+      /* ==========================================
+         INITIAL LOAD
+      ========================================== */
+
+      displayAvailableCases();
 
       displayAppointments();
 
     });
+
   </script>
 
 </body>

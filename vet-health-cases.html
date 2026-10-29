@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,10 +12,12 @@
 
 <body>
 
+  <!-- Dark Mode -->
   <button id="darkToggle" class="dark-toggle" type="button">
     🌙 Dark Mode
   </button>
 
+  <!-- Sidebar Toggle -->
   <button
     class="toggle-btn"
     id="sidebarToggle"
@@ -23,7 +26,7 @@
     ☰
   </button>
 
-
+  <!-- Vet Sidebar -->
   <aside class="sidebar" id="sidebar">
 
     <h1 class="logo">
@@ -68,124 +71,195 @@
 
   </aside>
 
-
+  <!-- Main Content -->
   <main class="main-content" id="mainContent">
 
+    <!-- Page Introduction -->
     <section class="hero">
 
       <h2>📋 Cattle Health Cases</h2>
 
       <p>
-        Review health cases submitted by farmers, examine AI preliminary
-        assessments and provide professional veterinary diagnoses.
+        Review health cases submitted by farmers, assess reported
+        symptoms and provide professional veterinary recommendations.
       </p>
 
     </section>
 
+    <!-- Case Summary -->
+    <section class="vet-summary-grid">
 
+      <div class="vet-summary-card">
+        <span class="vet-summary-icon">📋</span>
+        <div>
+          <h3 id="totalCases">0</h3>
+          <p>Total Cases</p>
+        </div>
+      </div>
+
+      <div class="vet-summary-card">
+        <span class="vet-summary-icon">🟠</span>
+        <div>
+          <h3 id="waitingCases">0</h3>
+          <p>Awaiting Review</p>
+        </div>
+      </div>
+
+      <div class="vet-summary-card">
+        <span class="vet-summary-icon">🩺</span>
+        <div>
+          <h3 id="acceptedCases">0</h3>
+          <p>My Accepted Cases</p>
+        </div>
+      </div>
+
+      <div class="vet-summary-card">
+        <span class="vet-summary-icon">🟢</span>
+        <div>
+          <h3 id="completedCases">0</h3>
+          <p>Recommendations Sent</p>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Submitted Cases -->
     <section class="content-section">
 
-      <h2>Submitted Health Cases</h2>
+      <h2>📥 Submitted Health Cases</h2>
+
+      <p>
+        Review cases submitted by cattle farmers.
+        Accept a case to become responsible for its assessment.
+      </p>
 
       <div id="vetCases">
 
         <div class="feature-card">
-
           <h3>No health cases yet</h3>
-
           <p>
-            Health cases submitted by farmers will appear here.
+            New cases submitted by farmers will appear here.
           </p>
-
         </div>
 
       </div>
 
     </section>
 
-
+    <!-- Case Details -->
     <section
       class="content-section"
       id="caseDetails"
       style="display:none;">
 
-      <h2>🩺 Case Details</h2>
+      <h2>🩺 Health Case Details</h2>
 
       <div id="selectedCase"></div>
 
+      <!-- Veterinary Recommendations Form -->
+      <form id="recommendationForm" style="display:none;">
 
-      <form id="diagnosisForm">
+        <h3>Veterinary Assessment and Recommendations</h3>
 
         <div class="input-group">
 
-          <label for="diagnosis">
-            Veterinary Diagnosis
+          <label for="vetDiagnosis">
+            Veterinary Assessment
           </label>
 
           <textarea
-            id="diagnosis"
+            id="vetDiagnosis"
             rows="5"
-            placeholder="Enter your veterinary diagnosis..."
+            placeholder="Enter your professional assessment..."
             required></textarea>
 
         </div>
 
-
         <div class="input-group">
 
-          <label for="vetAdvice">
-            Veterinary Advice / Treatment
+          <label for="vetRecommendation">
+            Recommendations / Advice
           </label>
 
           <textarea
-            id="vetAdvice"
+            id="vetRecommendation"
             rows="5"
-            placeholder="Enter treatment recommendations or advice..."
+            placeholder="Provide recommendations and advice to the farmer..."
             required></textarea>
 
         </div>
 
+        <div class="input-group">
 
-        <button
-          type="submit"
-          class="but">
+          <label for="consultationType">
+            Consultation Option
+          </label>
 
-          Submit Diagnosis
+          <select id="consultationType" required>
 
-        </button>
+            <option value="">
+              Select consultation option
+            </option>
 
+            <option value="Online">
+              Online consultation
+            </option>
 
-        <button
-          type="button"
-          class="but"
-          id="closeCaseButton">
+            <option value="Physical">
+              Physical appointment at practice
+            </option>
 
-          Close Case
+            <option value="Both">
+              Offer both options
+            </option>
 
+            <option value="No appointment">
+              No appointment currently required
+            </option>
+
+          </select>
+
+        </div>
+
+        <button type="submit" class="but">
+          📤 Submit Recommendations
         </button>
 
       </form>
 
+      <button
+        type="button"
+        class="but"
+        id="closeCaseButton">
+
+        Close Case Details
+
+      </button>
+
     </section>
 
-
+    <!-- Footer -->
     <footer class="dashboard-footer">
 
       <p>
-        © 2025 CattleCare Veterinary Portal
+        © 2026 CattleCare Veterinary Portal
       </p>
 
     </footer>
 
   </main>
 
-
+  <!-- Shared Website JavaScript -->
   <script src="script.js"></script>
 
-
+  <!-- Vet Health Case Management -->
   <script>
 
     document.addEventListener("DOMContentLoaded", function () {
+
+      /* ==========================================
+         ELEMENTS
+      ========================================== */
 
       const vetCases =
         document.getElementById("vetCases");
@@ -196,32 +270,227 @@
       const selectedCase =
         document.getElementById("selectedCase");
 
-      const diagnosisForm =
-        document.getElementById("diagnosisForm");
-
-      const diagnosis =
-        document.getElementById("diagnosis");
-
-      const vetAdvice =
-        document.getElementById("vetAdvice");
+      const recommendationForm =
+        document.getElementById("recommendationForm");
 
       const closeCaseButton =
         document.getElementById("closeCaseButton");
 
+      const totalCases =
+        document.getElementById("totalCases");
 
-      let symptomRecords =
-        JSON.parse(
-          localStorage.getItem("symptomRecords")
-        ) || [];
+      const waitingCases =
+        document.getElementById("waitingCases");
+
+      const acceptedCases =
+        document.getElementById("acceptedCases");
+
+      const completedCases =
+        document.getElementById("completedCases");
 
 
-      let selectedCaseIndex = null;
+      /* ==========================================
+         CURRENT VETERINARIAN
+      ========================================== */
 
+      // Temporary demonstration identity.
+      // Later, connect this to the logged-in vet account.
+
+      const currentVet =
+        localStorage.getItem("vetName") || "Veterinarian";
+
+
+      /* ==========================================
+         LOAD HEALTH CASES
+      ========================================== */
+
+      function loadRecords() {
+
+        try {
+
+          const records =
+            JSON.parse(
+              localStorage.getItem("symptomRecords")
+            );
+
+          return Array.isArray(records) ? records : [];
+
+        } catch (error) {
+
+          console.error("Could not load health cases:", error);
+
+          return [];
+
+        }
+
+      }
+
+
+      let symptomRecords = loadRecords();
+
+      let selectedCaseId = null;
+
+
+      // Give older records an ID if they do not have one.
+      // Preserve their existing information.
+
+      let changedRecords = false;
+
+      symptomRecords.forEach(function (record) {
+
+        if (!record.id) {
+
+          record.id =
+            "CASE-" + Date.now() + "-" +
+            Math.random().toString(36).slice(2, 7);
+
+          changedRecords = true;
+
+        }
+
+        // Convert the previous status to the new workflow.
+
+        if (record.status === "Awaiting Diagnosis") {
+
+          record.status = "Awaiting Vet Review";
+
+          changedRecords = true;
+
+        }
+
+        if (record.status === "Diagnosis Completed") {
+
+          record.status = "Recommendations Provided";
+
+          changedRecords = true;
+
+        }
+
+        if (record.assignedVet === undefined) {
+          record.assignedVet = null;
+          changedRecords = true;
+        }
+
+        if (record.appointmentEnabled === undefined) {
+          record.appointmentEnabled = false;
+          changedRecords = true;
+        }
+
+      });
+
+
+      if (changedRecords) {
+        saveRecords();
+      }
+
+
+      /* ==========================================
+         SAVE HEALTH CASES
+      ========================================== */
+
+      function saveRecords() {
+
+        localStorage.setItem(
+          "symptomRecords",
+          JSON.stringify(symptomRecords)
+        );
+
+      }
+
+
+      /* ==========================================
+         HTML DISPLAY SECURITY HELPER
+      ========================================== */
+
+      function escapeHTML(value) {
+
+        const div =
+          document.createElement("div");
+
+        div.textContent = value ?? "";
+
+        return div.innerHTML;
+
+      }
+
+
+      /* ==========================================
+         SAFE IMAGE DISPLAY
+      ========================================== */
+
+      function safeImageSource(source) {
+
+        if (typeof source !== "string") {
+          return "";
+        }
+
+        // Allow images saved as data URLs or normal HTTPS URLs.
+        if (
+          source.startsWith("data:image/") ||
+          source.startsWith("https://")
+        ) {
+          return source;
+        }
+
+        return "";
+
+      }
+
+
+      /* ==========================================
+         UPDATE SUMMARY
+      ========================================== */
+
+      function updateSummary() {
+
+        const total = symptomRecords.length;
+
+        const waiting =
+          symptomRecords.filter(function (record) {
+
+            return record.status === "Awaiting Vet Review";
+
+          }).length;
+
+        const accepted =
+          symptomRecords.filter(function (record) {
+
+            return (
+              record.assignedVet === currentVet &&
+              record.status === "Accepted"
+            );
+
+          }).length;
+
+        const completed =
+          symptomRecords.filter(function (record) {
+
+            return (
+              record.assignedVet === currentVet &&
+              (
+                record.status === "Recommendations Provided" ||
+                record.status === "Recommendations Provided - No Appointment Required"
+              )
+            );
+
+          }).length;
+
+
+        totalCases.textContent = total;
+        waitingCases.textContent = waiting;
+        acceptedCases.textContent = accepted;
+        completedCases.textContent = completed;
+
+      }
+
+
+      /* ==========================================
+         DISPLAY HEALTH CASES
+      ========================================== */
 
       function displayCases() {
 
         vetCases.innerHTML = "";
-
 
         if (symptomRecords.length === 0) {
 
@@ -229,24 +498,24 @@
 
             <div class="feature-card">
 
-              <h3>
-                No health cases yet
-              </h3>
+              <h3>No health cases yet</h3>
 
               <p>
-                New cattle health cases submitted by farmers
-                will appear here.
+                New cases submitted by farmers will appear here.
               </p>
 
             </div>
 
           `;
 
+          updateSummary();
+
           return;
+
         }
 
 
-        symptomRecords.forEach(function (record, index) {
+        symptomRecords.forEach(function (record) {
 
           const card =
             document.createElement("div");
@@ -259,11 +528,21 @@
             (record.symptoms || []).join(", ");
 
 
+          const belongsToAnotherVet =
+            record.assignedVet &&
+            record.assignedVet !== currentVet;
+
+
           card.innerHTML = `
 
             <h3>
-              🐄 ${escapeHTML(record.cattle)}
+              🐄 ${escapeHTML(record.cattle || "Unknown Cattle")}
             </h3>
+
+            <p>
+              <strong>Case ID:</strong>
+              ${escapeHTML(record.id)}
+            </p>
 
             <p>
               <strong>Symptoms:</strong>
@@ -272,18 +551,39 @@
 
             <p>
               <strong>Date:</strong>
-              ${escapeHTML(record.date)}
+              ${escapeHTML(record.date || "Not provided")}
             </p>
 
             <p>
               <strong>Status:</strong>
-              ${escapeHTML(record.status)}
+              ${escapeHTML(record.status || "Awaiting Vet Review")}
             </p>
+
+            ${
+              record.assignedVet
+                ? `
+                  <p>
+                    <strong>Assigned Veterinarian:</strong>
+                    ${escapeHTML(record.assignedVet)}
+                  </p>
+                `
+                : ""
+            }
+
+            ${
+              belongsToAnotherVet
+                ? `
+                  <p>
+                    This case is being handled by another veterinarian.
+                  </p>
+                `
+                : ""
+            }
 
             <button
               type="button"
               class="but view-case"
-              data-index="${index}">
+              data-id="${escapeHTML(record.id)}">
 
               View Case
 
@@ -301,28 +601,82 @@
           .querySelectorAll(".view-case")
           .forEach(function (button) {
 
-            button.addEventListener(
-              "click",
-              function () {
+            button.addEventListener("click", function () {
 
-                openCase(
-                  Number(button.dataset.index)
-                );
+              openCase(button.dataset.id);
 
-              }
-            );
+            });
 
           });
+
+
+        updateSummary();
 
       }
 
 
-      function openCase(index) {
+      /* ==========================================
+         FIND SELECTED CASE
+      ========================================== */
 
-        selectedCaseIndex = index;
+      function getSelectedRecord() {
+
+        return symptomRecords.find(function (record) {
+
+          return record.id === selectedCaseId;
+
+        });
+
+      }
+
+
+      /* ==========================================
+         OPEN CASE DETAILS
+      ========================================== */
+
+      function openCase(caseId) {
 
         const record =
-          symptomRecords[index];
+          symptomRecords.find(function (item) {
+
+            return item.id === caseId;
+
+          });
+
+
+        if (!record) {
+
+          alert("This health case could not be found.");
+
+          return;
+
+        }
+
+
+        selectedCaseId = caseId;
+
+
+        const symptoms =
+          (record.symptoms || []).join(", ");
+
+
+        const imageSource =
+          safeImageSource(record.capturedImage);
+
+
+        const assignedToAnotherVet =
+          record.assignedVet &&
+          record.assignedVet !== currentVet;
+
+
+        const canAccept =
+          !record.assignedVet &&
+          record.status === "Awaiting Vet Review";
+
+
+        const canRespond =
+          record.assignedVet === currentVet &&
+          record.status === "Accepted";
 
 
         selectedCase.innerHTML = `
@@ -330,142 +684,242 @@
           <div class="vet-case-details">
 
             <h3>
-              🐄 ${escapeHTML(record.cattle)}
+              🐄 ${escapeHTML(record.cattle || "Unknown Cattle")}
             </h3>
 
+            <p>
+              <strong>Case ID:</strong>
+              ${escapeHTML(record.id)}
+            </p>
 
-            ${
-              record.capturedImage
-                ? `
-
-                  <div style="margin:20px 0;text-align:center;">
-
-                    <h4>📷 Cattle Image</h4>
-
-                    <img
-                      src="${record.capturedImage}"
-                      alt="Captured cattle"
-                      style="width:100%;max-width:500px;max-height:400px;object-fit:cover;border-radius:12px;">
-
-                  </div>
-
-                `
-                : `
-                  <p>
-                    <strong>📷 Cattle Image:</strong>
-                    No image was captured.
-                  </p>
-                `
-            }
-
+            <p>
+              <strong>Farmer:</strong>
+              ${escapeHTML(record.farmerName || "Farmer details not available")}
+            </p>
 
             <p>
               <strong>Symptoms:</strong>
-              ${escapeHTML(
-                (record.symptoms || []).join(", ")
-              )}
+              ${escapeHTML(symptoms)}
             </p>
-
 
             <p>
-              <strong>Date:</strong>
-              ${escapeHTML(record.date)}
+              <strong>Date symptoms were noticed:</strong>
+              ${escapeHTML(record.date || "Not provided")}
             </p>
-
 
             <p>
               <strong>Additional Information:</strong>
             </p>
 
-
             <p>
-              ${
-                record.description
-                  ? escapeHTML(record.description)
-                  : "No additional information provided."
-              }
+              ${escapeHTML(record.description || "No additional information provided.")}
             </p>
 
+            ${
+              imageSource
+                ? `
+                  <div style="margin:20px 0;text-align:center;">
+
+                    <h4>📷 Cattle Photograph</h4>
+
+                    <img
+                      src="${escapeHTML(imageSource)}"
+                      alt="Cattle submitted by farmer"
+                      style="
+                        width:100%;
+                        max-width:450px;
+                        max-height:400px;
+                        object-fit:cover;
+                        border-radius:12px;
+                      ">
+
+                  </div>
+                `
+                : `
+                  <p>
+                    <strong>📷 Cattle Photograph:</strong>
+                    No photograph submitted.
+                  </p>
+                `
+            }
 
             ${
               record.aiAssessment
                 ? `
+                  <div class="feature-card">
 
-                  <div style="
-                    margin-top:25px;
-                    padding:20px;
-                    border-radius:12px;
-                    border:1px solid #d1d5db;
-                    background:#f8fafc;
-                  ">
-
-                    <h3>
-                      🤖 AI Preliminary Assessment
-                    </h3>
+                    <h3>🤖 AI Preliminary Assessment</h3>
 
                     <p>
                       <strong>Risk Level:</strong>
-                      ${escapeHTML(
-                        record.aiAssessment.riskLevel
-                      )}
+                      ${escapeHTML(record.aiAssessment.riskLevel)}
                     </p>
 
                     <p>
                       <strong>Possible Concern:</strong>
-                      ${escapeHTML(
-                        record.aiAssessment.concern
-                      )}
+                      ${escapeHTML(record.aiAssessment.concern)}
                     </p>
 
                     <p>
                       <strong>Assessment:</strong>
-                      ${escapeHTML(
-                        record.aiAssessment.explanation
-                      )}
+                      ${escapeHTML(record.aiAssessment.explanation)}
                     </p>
 
                     <p>
-                      <strong>Recommendation:</strong>
-                      ${escapeHTML(
-                        record.aiAssessment.recommendation
-                      )}
+                      <strong>AI Recommendation:</strong>
+                      ${escapeHTML(record.aiAssessment.recommendation)}
                     </p>
 
                     <p>
-                      ⚠️ Preliminary AI screening only.
-                      This does not replace professional veterinary diagnosis.
+                      ⚠️ This is a preliminary screening result.
+                      It does not replace professional veterinary diagnosis.
                     </p>
 
                   </div>
-
                 `
                 : ""
             }
 
-
-            <p style="margin-top:20px;">
-
+            <p>
               <strong>Current Status:</strong>
-
               ${escapeHTML(record.status)}
-
             </p>
+
+            ${
+              record.assignedVet
+                ? `
+                  <p>
+                    <strong>Assigned Veterinarian:</strong>
+                    ${escapeHTML(record.assignedVet)}
+                  </p>
+                `
+                : ""
+            }
+
+            ${
+              assignedToAnotherVet
+                ? `
+                  <div class="feature-card">
+                    <p>
+                      This case has already been accepted by
+                      ${escapeHTML(record.assignedVet)}.
+                    </p>
+                  </div>
+                `
+                : ""
+            }
+
+            ${
+              canAccept
+                ? `
+                  <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:20px;">
+
+                    <button
+                      type="button"
+                      class="but"
+                      id="acceptCase">
+
+                      ✅ Accept Case
+
+                    </button>
+
+                    <button
+                      type="button"
+                      class="but"
+                      id="declineCase">
+
+                      ❌ Decline Case
+
+                    </button>
+
+                  </div>
+                `
+                : ""
+            }
+
+            ${
+              record.diagnosis
+                ? `
+                  <div class="feature-card">
+
+                    <h3>🩺 Veterinary Assessment</h3>
+
+                    <p>
+                      ${escapeHTML(record.diagnosis)}
+                    </p>
+
+                    <h4>Recommendations / Advice</h4>
+
+                    <p>
+                      ${escapeHTML(record.advice || "")}
+                    </p>
+
+                    <p>
+                      <strong>Consultation Option:</strong>
+                      ${escapeHTML(record.consultationType || "Not specified")}
+                    </p>
+
+                    <p>
+                      <strong>Appointment Booking:</strong>
+                      ${record.appointmentEnabled ? "Available after recommendations" : "Not currently required"}
+                    </p>
+
+                  </div>
+                `
+                : ""
+            }
 
           </div>
 
         `;
 
 
-        diagnosis.value =
-          record.diagnosis || "";
+        // Show the recommendation form only to the vet
+        // who accepted the case, while it is awaiting a response.
 
-        vetAdvice.value =
-          record.advice || "";
+        recommendationForm.style.display =
+          canRespond ? "block" : "none";
 
 
-        caseDetails.style.display =
-          "block";
+        if (canRespond) {
 
+          document.getElementById("vetDiagnosis").value =
+            record.diagnosis || "";
+
+          document.getElementById("vetRecommendation").value =
+            record.advice || "";
+
+          document.getElementById("consultationType").value =
+            record.consultationType || "";
+
+        }
+
+
+        // Accept Case
+
+        const acceptButton =
+          document.getElementById("acceptCase");
+
+        if (acceptButton) {
+
+          acceptButton.addEventListener("click", acceptCase);
+
+        }
+
+
+        // Decline Case
+
+        const declineButton =
+          document.getElementById("declineCase");
+
+        if (declineButton) {
+
+          declineButton.addEventListener("click", declineCase);
+
+        }
+
+
+        caseDetails.style.display = "block";
 
         caseDetails.scrollIntoView({
           behavior: "smooth"
@@ -474,83 +928,292 @@
       }
 
 
-      diagnosisForm.addEventListener(
+      /* ==========================================
+         ACCEPT CASE
+      ========================================== */
+
+      function acceptCase() {
+
+        const record = getSelectedRecord();
+
+        if (!record) return;
+
+
+        if (
+          record.assignedVet &&
+          record.assignedVet !== currentVet
+        ) {
+
+          alert(
+            "Another veterinarian has already accepted this case."
+          );
+
+          refreshRecords();
+
+          return;
+
+        }
+
+
+        if (record.status !== "Awaiting Vet Review") {
+
+          alert("This case is no longer available for acceptance.");
+
+          return;
+
+        }
+
+
+        record.assignedVet = currentVet;
+
+        record.status = "Accepted";
+
+        record.acceptedDate =
+          new Date().toISOString();
+
+
+        saveRecords();
+
+        displayCases();
+
+        openCase(selectedCaseId);
+
+
+        alert(
+          "You have accepted this health case. You can now provide your assessment and recommendations."
+        );
+
+      }
+
+
+      /* ==========================================
+         DECLINE CASE
+      ========================================== */
+
+      function declineCase() {
+
+        const record = getSelectedRecord();
+
+        if (!record) return;
+
+
+        const confirmed = confirm(
+          "Are you sure you want to decline this case? It will be returned to the available case list for another veterinarian."
+        );
+
+
+        if (!confirmed) return;
+
+
+        record.assignedVet = null;
+
+        record.status = "Awaiting Vet Review";
+
+        record.declinedDate =
+          new Date().toISOString();
+
+
+        saveRecords();
+
+        caseDetails.style.display = "none";
+
+        recommendationForm.style.display = "none";
+
+        selectedCaseId = null;
+
+        displayCases();
+
+
+        alert(
+          "The case has been returned to the available case list."
+        );
+
+      }
+
+
+      /* ==========================================
+         SUBMIT VETERINARY RECOMMENDATIONS
+      ========================================== */
+
+      recommendationForm.addEventListener(
         "submit",
         function (event) {
 
           event.preventDefault();
 
 
-          if (selectedCaseIndex === null) {
+          const record = getSelectedRecord();
+
+          if (!record) return;
+
+
+          // Make sure only the assigned vet can respond.
+
+          if (record.assignedVet !== currentVet) {
+
+            alert(
+              "You must accept this case before submitting recommendations."
+            );
+
             return;
+
           }
 
 
-          symptomRecords[selectedCaseIndex].diagnosis =
-            diagnosis.value.trim();
+          if (record.status !== "Accepted") {
+
+            alert(
+              "This case is not currently awaiting recommendations."
+            );
+
+            return;
+
+          }
 
 
-          symptomRecords[selectedCaseIndex].advice =
-            vetAdvice.value.trim();
+          const diagnosis =
+            document
+              .getElementById("vetDiagnosis")
+              .value.trim();
 
 
-          symptomRecords[selectedCaseIndex].status =
-            "Diagnosis Completed";
+          const advice =
+            document
+              .getElementById("vetRecommendation")
+              .value.trim();
 
 
-          symptomRecords[selectedCaseIndex].diagnosedDate =
-            new Date().toISOString().split("T")[0];
+          const consultationType =
+            document
+              .getElementById("consultationType")
+              .value;
 
 
-          localStorage.setItem(
-            "symptomRecords",
-            JSON.stringify(symptomRecords)
-          );
+          if (
+            !diagnosis ||
+            !advice ||
+            !consultationType
+          ) {
+
+            alert(
+              "Please complete all the required fields."
+            );
+
+            return;
+
+          }
+
+
+          record.diagnosis = diagnosis;
+
+          record.advice = advice;
+
+          record.consultationType =
+            consultationType;
+
+          record.recommendationsDate =
+            new Date().toISOString();
+
+
+          record.appointmentEnabled =
+            consultationType === "Online" ||
+            consultationType === "Physical" ||
+            consultationType === "Both";
+
+
+          if (record.appointmentEnabled) {
+
+            record.status =
+              "Recommendations Provided";
+
+          } else {
+
+            record.status =
+              "Recommendations Provided - No Appointment Required";
+
+          }
+
+
+          saveRecords();
+
+          displayCases();
+
+          openCase(selectedCaseId);
 
 
           alert(
-            "Diagnosis submitted successfully."
+            "Veterinary recommendations have been submitted. The farmer can now view your response."
           );
-
-
-          diagnosisForm.reset();
-
-          caseDetails.style.display =
-            "none";
-
-          selectedCaseIndex = null;
-
-          displayCases();
 
         }
       );
 
+
+      /* ==========================================
+         CLOSE CASE DETAILS
+      ========================================== */
 
       closeCaseButton.addEventListener(
         "click",
         function () {
 
-          caseDetails.style.display =
-            "none";
+          caseDetails.style.display = "none";
 
-          selectedCaseIndex = null;
+          recommendationForm.style.display = "none";
+
+          selectedCaseId = null;
 
         }
       );
 
 
-      function escapeHTML(value) {
+      /* ==========================================
+         REFRESH WHEN RECORDS CHANGE
+      ========================================== */
 
-        const div =
-          document.createElement("div");
+      function refreshRecords() {
 
-        div.textContent =
-          value ?? "";
+        symptomRecords = loadRecords();
 
-        return div.innerHTML;
+        displayCases();
+
+        // Refresh the open case if it still exists.
+
+        if (selectedCaseId) {
+
+          const stillExists =
+            symptomRecords.some(function (record) {
+
+              return record.id === selectedCaseId;
+
+            });
+
+          if (stillExists) {
+
+            openCase(selectedCaseId);
+
+          } else {
+
+            caseDetails.style.display = "none";
+
+            selectedCaseId = null;
+
+          }
+
+        }
 
       }
 
+
+      window.addEventListener(
+        "storage",
+        refreshRecords
+      );
+
+
+      /* ==========================================
+         INITIAL PAGE LOAD
+      ========================================== */
 
       displayCases();
 
